@@ -74,6 +74,9 @@ export const renderMember = (member) => (
 export const onSearchSubmit = async (ev: SubmitEvent) => {
 	ev.preventDefault()
 	client.setToken(ev.target.elements["token"].value)
+	if (ev.target.elements["token-save"].checked)
+		window.localStorage.setItem("pk-token", ev.target.elements["token"].value)
+
 	let searchTerms = {}
 	Array.from(ev.target.querySelectorAll('.search-term'))
 		.forEach((a) => {
@@ -127,6 +130,15 @@ export const addSearchTerm = (ev: ClickEvent) => {
 	), ev.target)
 }
 
+export const onToggleSave = (ev: Event) => {
+	ev.preventDefault()
+	if (ev.target.checked) {
+		window.localStorage.setItem("pk-token", g("query").elements["token"].value)
+	} else {
+		window.localStorage.removeItem("pk-token")
+	}
+}
+
 export const init = () => {
 	g("query-fields").append(...Object.entries(usableFields).map(([key, friendly]) => (
 		<fieldset class="query-field" dataset={{fieldName: key}}>
@@ -138,8 +150,11 @@ export const init = () => {
 	s(".query-field--addterm").forEach((el) => el.addEventListener('click', (ev) => addSearchTerm(ev), false))
 	g("query").addEventListener('submit', (ev) => onSearchSubmit(ev), false)
 
-	if (!!window.localStorage.getItem("pk-token"))
+	g("query-token-save").addEventListener("change", (ev) => onToggleSave(ev), false)
+	if (!!window.localStorage.getItem("pk-token")) {
+		g("query-token-save").checked = true
 		g("query-token").value = window.localStorage.getItem("pk-token")
+	}
 }
 
 if (typeof document.currentScript.dataset.noinit !== "string")
