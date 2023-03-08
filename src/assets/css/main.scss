@@ -30,6 +30,19 @@ body
 	{
 		max-width: var(--body--width);
 	}
+
+	&.flex
+	{
+		display: flex;
+		flex-flow: column nowrap;
+		align-items: strctch;
+		flex: 1;
+
+		#page-content
+		{
+			flex: 1;
+		}
+	}
 }
 
 h1
@@ -80,14 +93,18 @@ ol
 
 .inline-list
 {
-	display: inline-block;
+	display: inline-flex;
 	list-style: none outside none;
 	margin: 0;
 	padding: 0;
 
 	> li
 	{
-		@extend .inline-list;
+		display: inline-block;
+		list-style: none outside none;
+		margin: 0;
+		padding: 0;
+
 		&:not(:last-child)::after
 		{
 			content: '\a0\2022\a0';
