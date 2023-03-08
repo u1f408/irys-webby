@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "lib": ["es5", "es6", "dom"],
+    "target": "es6",
+    "module": "esnext",
+    "jsx": "react",
+    "jsxFactory": "jsx"
+  }
+}

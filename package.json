@@ -1,0 +1,28 @@
+{
+  "private": true,
+  "dependencies": {
+    "@xeserv/xeact": "^0.69.71"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^1.0.2",
+    "@rollup/plugin-alias": "^4.0.3",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "esbuild": "^0.16.15",
+    "npm-run-all": "^4.1.5",
+    "rollup": "^3.9.1",
+    "rollup-plugin-esbuild": "^5.0.0",
+    "sass": "^1.58.3",
+    "typescript": "^4.9.4"
+  },
+  "scripts": {
+    "build:iryscc:11ty": "cd src/iryscc && eleventy --config eleventy.config.js",
+    "build:iryscc:rollup": "cd src/iryscc && rollup --config rollup.config.mjs",
+    "build:iryscc:sass": "cd src/iryscc && sass --style=compressed .:../../dist/iryscc",
+    "build:iryscc": "mkdir -p dist/iryscc && run-s build:iryscc:*",
+    "build:assets:11ty": "cd src/assets && eleventy --config eleventy.config.js",
+    "build:assets:sass": "cd src/assets && sass --style=compressed .:../../dist/assets",
+    "build:assets": "mkdir -p dist/assets && run-s build:assets:*",
+    "build": "run-s clean build:*",
+    "clean": "rm -rf dist && mkdir dist"
+  }
+}
