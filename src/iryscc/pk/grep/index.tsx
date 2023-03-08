@@ -137,6 +137,9 @@ export const init = () => {
 
 	s(".query-field--addterm").forEach((el) => el.addEventListener('click', (ev) => addSearchTerm(ev), false))
 	g("query").addEventListener('submit', (ev) => onSearchSubmit(ev), false)
+
+	if (!!window.localStorage.getItem("pk-token"))
+		g("query-token").value = window.localStorage.getItem("pk-token")
 }
 
 if (typeof document.currentScript.dataset.noinit !== "string")
