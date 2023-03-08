@@ -21,12 +21,12 @@ button
 	border: 1px solid var(--foreground);
 	color: var(--foreground);
 	background: var(--background);
-}
 
-button.primary
-{
-	color: var(--background);
-	background: var(--foreground);
+	&.primary
+	{
+		color: var(--background);
+		background: var(--foreground);
+	}
 }
 
 .fieldContainer:not(:last-child),
