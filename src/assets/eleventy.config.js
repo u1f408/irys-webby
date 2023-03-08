@@ -6,9 +6,6 @@ module.exports = eleventyWrapper(function() {
 		dir: {
 			input: ".",
 			output: shared.ROOT_DIR + "/dist/assets",
-			includes: "_includes",
-			layouts: "_includes",
-			data: "_data",
 		},
 	}
 })
