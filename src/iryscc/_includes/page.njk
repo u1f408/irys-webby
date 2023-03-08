@@ -1,0 +1,10 @@
+{% extends "base.njk" %}
+{% block head_extra %}
+	<link rel="stylesheet" href="{{ meow.assetBase }}/css/main.css">
+{% endblock %}
+{% block content %}
+	<h1>{{ title }}</h1>
+	<main id="page-content">
+		{{ content | safe }}
+	</main>
+{% endblock %}

@@ -1,0 +1,36 @@
+---
+title: PKfronters
+---
+{% extends "base.njk" %}
+{% block head_extra %}
+	<link rel="stylesheet" href="pkfronters.css">
+	<link rel="stylesheet" href="index.css">
+{% endblock %}
+{% block content %}
+	<div class="banner" id="app-loading">Loading PKfronters...</div>
+	<header id="app-header" class="hidden">
+		<h1 id="name">PKfronters</h1>
+		<div id="app-header-buttons">
+			<button class="button" id="app-btnOptions">Options</button>
+		</div>
+	</header>
+
+	<main id="fronters"></main>
+
+	<form class="hoverbox hidden" id="app-options">
+		<div class="fieldContainer">
+			<label for="inputSystemId">System ID</label>
+			<input id="inputSystemId" name="system" placeholder="exmpl" pattern="[a-z]{5,}">
+		</div>
+		<fieldset>
+			<legend>Display options</legend>
+			<label for="checkPronouns"><input type="checkbox" id="checkPronouns" name="pronouns"> Show pronouns</label>
+			<label for="checkDisplayNames"><input type="checkbox" id="checkDisplayNames" name="displayNames"> Show member display names</label>
+			<label for="checkCardBorder"><input type="checkbox" id="checkCardBorder" name="cardBorder"> Show border around entire card</label>
+			<label for="checkNewCard"><input type="checkbox" id="checkNewCard" name="newCard"> Use alternate card layout</label>
+		</fieldset>
+		<button class="button" type="submit">Go!</button>
+	</form>
+
+	<script src="index.js"></script>
+{% endblock %}

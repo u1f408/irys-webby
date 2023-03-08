@@ -1,0 +1,27 @@
+:root {
+	--background: #ededfa;
+	--foreground: #181819;
+	--link--foreground: #1212b3;
+	--code--background: #cfcfcf;
+	--code--foreground: #030303;
+	--body--width: 64rem;
+}
+
+@media screen and (prefers-color-scheme: dark)
+{
+	:root
+	{
+		--background: #181819;
+		--foreground: #ededfa;
+		--link--foreground: #1212b3;
+		--code--background: #030303;
+		--code--foreground: #cfcfcf;
+	}
+}
+
+*,
+*::before,
+*::after
+{
+	box-sizing: border-box;
+}

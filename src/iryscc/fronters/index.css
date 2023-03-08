@@ -1,0 +1,254 @@
+:root
+{
+	--focus-color: hsla(16, 100%, 50%, 1);
+	--mobile--avatar-size: 3rem;
+	--desktop--avatar-size: 6rem;
+}
+
+*,
+*::before,
+*::after
+{
+	box-sizing: border-box;
+}
+
+html
+{
+	font: 100%/1.25 sans-serif;
+}
+
+html,
+body
+{
+	flex: 1;
+	display: flex;
+	flex-flow: column nowrap;
+	margin: 0;
+	padding: 0;
+}
+
+.button
+{
+	display: block;
+	background-color: #fff;
+	color: #000;
+	border-radius: 2px;
+	border: 1px solid #000;
+	padding: 0.175rem 0.375rem;
+}
+
+.button:hover
+{
+	background-image: linear-gradient(to bottom, transparent, hsla(0, 0%, 80%, 0.6));
+}
+
+input:not([type=checkbox]):focus
+.button:focus
+{
+	border-color: var(--focus-color);
+}
+
+.hoverbox
+{
+	position: fixed;
+	top: 3rem;
+	left: 0.5rem;
+	right: 0.5rem;
+	margin: auto;
+	padding: 1rem;
+	display: flex;
+	flex-flow: column nowrap;
+	overflow-y: scroll;
+
+	width: calc(100vw - 1rem);
+	border-radius: 4px;
+	border: 1px solid hsla(0, 0%, 40%, 0.75);
+	background: #fff;
+}
+
+fieldset
+{
+	margin: 0.5rem 0;
+	border-radius: 2px;
+	display: flex;
+	flex-flow: column nowrap;
+}
+
+#app-header
+{
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-between;
+	align-items: center;
+
+	gap: 1rem;
+	padding: 0.5rem 1rem;
+	height: 3rem;
+	max-height: 3rem;
+
+	border-bottom: 1px solid hsla(0, 0%, 40%, 0.75);
+}
+
+#app-header h1
+{
+	margin: 0;
+	padding: 0;
+	font-size: 1.5rem;
+}
+
+#app-options
+{
+	top: calc(3rem - 1px);
+	border-width: 0 1px 1px 1px;
+	border-radius: 0 0 4px 4px;
+}
+
+#app-options .fieldContainer
+{
+	display: flex;
+	flex-flow: row nowrap;
+	border: 1px solid hsla(0, 0%, 40%, 1);
+	border-radius: 2px;
+	margin: 0;
+}
+
+#app-options .fieldContainer label
+{
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: baseline;
+	align-items: center;
+	border-right: 1px solid hsla(0, 0%, 40%, 1);
+	font-size: 0.8em;
+	margin: 0;
+	padding: 0.25rem 0.5rem;
+	background: hsla(0, 0%, 95%, 1);
+}
+
+#app-options .fieldContainer input
+{
+	flex: 1;
+	border: none;
+	margin: 0;
+	padding: 0.25rem 0.5rem;
+}
+
+#fronters,
+#fronters *,
+#fronters *::before,
+#fronters *::after
+{
+	box-sizing: content-box !important;
+}
+
+#fronters
+{
+	padding: 1rem;
+	align-items: center;
+}
+
+.pkfronters--member-card
+{
+	gap: 0.5rem;
+	min-width: calc(100% - 3rem);
+	flex-flow: row wrap;
+}
+
+.pkfronters--member-card--avatar
+{
+	min-width: var(--mobile--avatar-size);
+	min-height: var(--mobile--avatar-size);
+	width: var(--mobile--avatar-size);
+	height: var(--mobile--avatar-size);
+	margin: 0;
+}
+
+.pkfronters--member-card-container.pkfronters--newcard
+{
+	flex-flow: row wrap !important;
+	justify-content: center;
+}
+
+.pkfronters--member-card.pkfronters--newcard
+{
+	padding: 0.325rem;
+	border: none;
+	border-bottom: 4px solid transparent;
+	border-radius: 4px;
+	background: hsla(0, 0%, 94%, 1);
+	color: hsla(0, 0%, 0%, 1);
+	flex-flow: column nowrap;
+	min-width: 12rem;
+	width: 12rem;
+	gap: 4px !important;
+}
+
+.pkfronters--member-card.pkfronters--newcard .pkfronters--member-card--avatar
+{
+	min-width: 12rem;
+	min-height: 12rem;
+	width: 12rem;
+	height: 12rem;
+	margin: 0;
+}
+
+.pkfronters--member-card.pkfronters--newcard .pkfronters--member-card--pronouns
+{
+	font-size: 0.85rem;
+}
+
+.pkfronters--helptext,
+.pkfronters--error
+{
+	text-align: center;
+}
+
+@media screen and (min-width: 56rem)
+{
+	.hoverbox
+	{
+		max-width: 32rem;
+	}
+
+	#app-options
+	{
+		left: unset;
+		right: 0;
+		border-radius: 0 0 0 4px;
+		border-width: 0 0 1px 1px;
+		padding-top: 0;
+	}
+
+	#fronters
+	{
+		align-items: baseline;
+		justify-content: center;
+	}
+
+	.pkfronters--member-card
+	{
+		gap: 1rem;
+		min-width: 8em;
+		flex-flow: column nowrap;
+	}
+
+	.pkfronters--member-card--avatar
+	{
+		min-width: var(--desktop--avatar-size);
+		min-height: var(--desktop--avatar-size);
+		width: var(--desktop--avatar-size);
+		height: var(--desktop--avatar-size);
+		margin: 0 0 0.5rem 0;
+	}
+}
+
+.hidden,
+body.pkfronters-loaded #app-loading
+{
+	display: none;
+	position: absolute;
+	top: -99999;
+	left: -99999;
+	clip: rect(1px, 1px, 1px, 1px);
+	clip: rect(1px 1px 1px 1px);
+}

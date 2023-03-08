@@ -1,0 +1,28 @@
+---
+title: pkgrep - advanced member search
+---
+{% extends "base.njk" %}
+{% block head_extra %}
+	<link rel="stylesheet" href="{{ meow.assetBase }}/css/main.css">
+	<link rel="stylesheet" href="index.css">
+{% endblock %}
+{% block content %}
+	<h1>pkgrep - advanced member search</h1>
+	<p>This tool allows you to do "advanced" searches for members of your <a href="https://pluralkit.me">PluralKit</a> system.</p>
+	<p>A member must match <em>all</em> of the given search terms to be returned in the results.</p>
+
+	<form id="query">
+		<div class="fieldContainer">
+			<label for="query-token">PluralKit token</label>
+			<input type="password" name="token" id="query-token" required>
+		</div>
+
+		<div id="query-fields"></div>
+
+		<input type="hidden" name="json" id="query-json" value="{}">
+		<button class="primary" type="submit">Search!</button>
+	</form>
+
+	<div id="result"></div>
+	<script src="index.js"></script>
+{% endblock %}
