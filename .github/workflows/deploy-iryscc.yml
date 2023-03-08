@@ -1,0 +1,33 @@
+name: "Deploy irys.cc"
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/iryscc/**'
+      - 'lib/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v20
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+        extra_nix_config: |
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+    - run: nix develop --command yarn install
+    - run: nix develop --command yarn run clean
+    - run: nix develop --command yarn run build:iryscc
+    - name: Deploy to BunnyCDN
+      uses: u1f408/bunnycdn-storage-deploy@main
+      with:
+        source: "dist/iryscc"
+        storageEndpoint: "la.storage.bunnycdn.com"
+        storageZoneName: "irys-web"
+        accessKey: "${{ secrets.IRYSCC_BUNNYCDN_STORAGE_KEY }}"
+        pullZoneId: "${{ secrets.IRYSCC_BUNNYCDN_PULLZONE_ID }}"
+        pullZoneAccessKey: "${{ secrets.BUNNYCDN_API_KEY }}"
+        remove: "true"
+        purge: "true"
