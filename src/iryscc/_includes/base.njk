@@ -6,7 +6,7 @@
 	<title>{{ title }}</title>
 	{% block head_extra %}{% endblock %}
 </head>
-<body>
+<body {% block body_attrs %}{% endblock %}>
 	{% block content %}
 	{{ content | safe }}
 	{% endblock %}
