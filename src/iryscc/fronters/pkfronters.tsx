@@ -72,7 +72,7 @@ const memberCardStyle = (member: PKMember, opts: Options): { [key:string]: strin
 const memberCardAvatarStyle = (member: PKMember, opts: Options): { [key:string]: string } => ({
 	'borderColor': (!opts.useNewCard && opts.cardBorder === "inner") ? "#" + (member.color || '000') : undefined,
 	'borderWidth': (opts.useNewCard || opts.cardBorder === "outer") ? "0px" : undefined,
-	'backgroundImage': `url(${MediaProxyAvatar(member.avatar_url)})`,
+	'backgroundImage': `url(${MediaProxyAvatar(member.webhook_avatar_url || member.avatar_url)})`,
 	'backgroundRepeat': 'no-repeat',
 	'backgroundPosition': 'center center',
 	'backgroundSize': 'cover',
