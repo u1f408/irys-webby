@@ -35,6 +35,9 @@ const defaultRules: Rule[] = [
     new Rule('paragraph', [
         new Pattern(/([^\n]+\n?)/g, '\n<p>$1</p>\n'),
     ]),
+    new Rule('linebreak', [
+        new Pattern(/\n(?!\n)/g, '<br>'), 
+    ]),
 ];
 
 export default class Markdown {
