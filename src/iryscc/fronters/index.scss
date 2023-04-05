@@ -35,11 +35,11 @@ body
 	border-radius: 2px;
 	border: 1px solid #000;
 	padding: 0.175rem 0.375rem;
-}
 
-.button:hover
-{
-	background-image: linear-gradient(to bottom, transparent, hsla(0, 0%, 80%, 0.6));
+	&:hover
+	{
+		background-image: linear-gradient(to bottom, transparent, hsla(0, 0%, 80%, 0.6));
+	}
 }
 
 input:not([type=checkbox]):focus
@@ -66,6 +66,36 @@ input:not([type=checkbox]):focus
 	background: #fff;
 }
 
+.options-extra
+{
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+	text-align: center;
+	margin: 0.5rem 0 0 0;
+}
+
+.inline-list
+{
+	display: inline-flex;
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;
+
+	> li
+	{
+		display: inline-block;
+		list-style: none outside none;
+		margin: 0;
+		padding: 0;
+
+		&:not(:last-child)::after
+		{
+			content: '\a0\2022\a0';
+		}
+	}
+}
+
 fieldset
 {
 	margin: 0.5rem 0;
@@ -87,13 +117,13 @@ fieldset
 	max-height: 3rem;
 
 	border-bottom: 1px solid hsla(0, 0%, 40%, 0.75);
-}
 
-#app-header h1
-{
-	margin: 0;
-	padding: 0;
-	font-size: 1.5rem;
+	h1
+	{
+		margin: 0;
+		padding: 0;
+		font-size: 1.5rem;
+	}
 }
 
 #app-options
@@ -101,36 +131,36 @@ fieldset
 	top: calc(3rem - 1px);
 	border-width: 0 1px 1px 1px;
 	border-radius: 0 0 4px 4px;
-}
 
-#app-options .fieldContainer
-{
-	display: flex;
-	flex-flow: row nowrap;
-	border: 1px solid hsla(0, 0%, 40%, 1);
-	border-radius: 2px;
-	margin: 0;
-}
+	.fieldContainer
+	{
+		display: flex;
+		flex-flow: row nowrap;
+		border: 1px solid hsla(0, 0%, 40%, 1);
+		border-radius: 2px;
+		margin: 0;
 
-#app-options .fieldContainer label
-{
-	display: flex;
-	flex-flow: row nowrap;
-	justify-content: baseline;
-	align-items: center;
-	border-right: 1px solid hsla(0, 0%, 40%, 1);
-	font-size: 0.8em;
-	margin: 0;
-	padding: 0.25rem 0.5rem;
-	background: hsla(0, 0%, 95%, 1);
-}
+		label
+		{
+			display: flex;
+			flex-flow: row nowrap;
+			justify-content: baseline;
+			align-items: center;
+			border-right: 1px solid hsla(0, 0%, 40%, 1);
+			font-size: 0.8em;
+			margin: 0;
+			padding: 0.25rem 0.5rem;
+			background: hsla(0, 0%, 95%, 1);
+		}
 
-#app-options .fieldContainer input
-{
-	flex: 1;
-	border: none;
-	margin: 0;
-	padding: 0.25rem 0.5rem;
+		input
+		{
+			flex: 1;
+			border: none;
+			margin: 0;
+			padding: 0.25rem 0.5rem;
+		}
+	}
 }
 
 #fronters,

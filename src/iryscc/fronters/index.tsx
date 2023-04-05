@@ -30,7 +30,7 @@ export const OnHashChange = (hash: string): Promise<void> => {
 			</p>
 			<p>
 				Need help? Ask in the <code>#third-party-resources</code> channel in the&nbsp;
-				<a href="https://discord.gg/PczBt78" target="_blank" rel="nofollow">
+				<a href="https://discord.gg/pluralkit" target="_blank" rel="nofollow">
 					PluralKit support server
 				</a>!
 			</p>
