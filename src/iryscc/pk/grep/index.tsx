@@ -5,7 +5,7 @@ import PluralKitAPI, { PKClient, PKError, MemoryCache, type PKMember, type IPlur
 import Markdown from '@meow/lib/markdown'
 
 export const mkdnInline = (new Markdown()).removeRule('paragraph')
-export const mkdn = new Markdown()
+export const mkdn = (new Markdown()).removeRule('linebreak')
 export const defaultAvatar = "https://cdn.discordapp.com/embed/avatars/0.png"
 export const usableFields: { [key:string]: string } = {
 	"name": "Member name",
@@ -53,7 +53,7 @@ export const client = new SearchClient()
 
 export const renderMember = (member) => (
 	<div class="result-member" dataset={{uuid: member.id, hid: member.id}}>
-		<img class="result-member-avatar" src={MediaProxyAvatar(member.avatar_url || defaultAvatar)} style={{borderColor: '#' + (member.color || '000')}}></img>
+		<img class="result-member-avatar" src={MediaProxyAvatar(member.webhook_avatar_url || member.avatar_url || defaultAvatar)} style={{borderColor: '#' + (member.color || '000')}}></img>
 		<div class="result-member-inner">
 			<div class="result-member-name">
 				<strong>{member.name}</strong>
