@@ -24,7 +24,7 @@ html
 body
 {
 	flex: 1;
-	padding: 1rem;
+	padding: 2rem 1rem 1rem 1rem;
 
 	&:not(.fw)
 	{
@@ -62,6 +62,7 @@ a
 
 code
 {
+	vertical-align: baseline;
 	display: inline-block;
 	padding: 0.25rem 0.325rem;
 	color: var(--code--foreground);
@@ -89,6 +90,11 @@ ol
 {
 	margin: 1rem 0;
 	padding: 0 1rem;
+
+	li
+	{
+		margin: 0 0 0.25rem 0;
+	}
 }
 
 .inline-list
@@ -120,4 +126,44 @@ ol
 	border: 1px solid hsla(50, 60%, 50%, 1);
 	background: hsla(50, 100%, 80%, 1);
 	color: hsla(0, 0%, 0%, 1);
+}
+
+nav#iryscc-top-nav
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	padding: 0 1rem;
+
+	background: var(--top-nav--background);
+	color: var(--top-nav--foreground);
+	border-bottom: 1px solid var(--top-nav--border-color);
+
+	> .inner
+	{
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: flex-start;
+		align-items: center;
+		padding: 0.5rem 0;
+	}
+
+	.brand
+	{
+		> a
+		{
+			font-weight: bold;
+		}
+
+		&::after
+		{
+			content: '\a0\2f\a0';
+		}
+	}
+}
+
+body:not(.fw) nav#iryscc-top-nav > .inner
+{
+	max-width: var(--body--width);
 }

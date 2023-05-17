@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block content %}
+	{% include "nav.njk" %}
 	<main id="page-content">
 		<h1>{{ title }}</h1>
 		{{ content | safe }}

@@ -42,7 +42,7 @@ button:not(:last-child)
 	position: relative;
 	display: flex;
 	flex-flow: row nowrap;
-	border: 1px solid hsla(0, 0%, 40%, 1);
+	border: 1px solid var(--form-input--border-color);
 	border-radius: 2px;
 	margin: 0;
 
@@ -54,12 +54,12 @@ button:not(:last-child)
 		justify-content: baseline;
 		align-items: center;
 		border: none;
-		border-right: 1px solid hsla(0, 0%, 40%, 1);
+		border-right: 1px solid var(--form-input--border-color);
 		font-size: 0.8em;
 		margin: 0;
 		padding: 0.25rem 0.5rem;
-		background: hsla(0, 0%, 95%, 1);
-		color: hsla(0, 0%, 5%, 1);
+		background: var(--form-input--background);
+		color: var(--form-input--foreground);
 	}
 
 	input {
@@ -67,6 +67,8 @@ button:not(:last-child)
 		border: none;
 		margin: 0;
 		padding: 0.25rem 0.5rem;
+		background: var(--form-input--background);
+		color: var(--form-input--foreground);
 	}
 
 	.clearButton

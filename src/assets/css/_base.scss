@@ -1,9 +1,16 @@
 :root {
-	--background: #ededfa;
+	--background: #f7f7fd;
 	--foreground: #181819;
+	--top-nav--background: #fafaff;
+	--top-nav--foreground: #181819;
+	--top-nav--border-color: #181819;
 	--link--foreground: #1212b3;
 	--code--background: #dadada;
 	--code--foreground: #030303;
+	--form-label--background: #f2f2f2;
+	--form-input--background: #ffffff;
+	--form-input--foreground: #0d0d0d;
+	--form-input--border-color: #0d0d0d;
 	--footer--foreground: #57575b;
 	--body--width: 64rem;
 }
@@ -13,10 +20,17 @@
 	:root
 	{
 		--background: #181819;
+		--top-nav--background: #181819;
+		--top-nav--foreground: #fafaff;
+		--top-nav--border-color: #fafaff;
 		--foreground: #ededfa;
-		--link--foreground: #ccccfa;
+		--link--foreground: #dadafb;
 		--code--background: #030303;
-		--code--foreground: #dadada;
+		--code--foreground: #f3f3f3;
+		--form-label--background: #0d0d0d;
+		--form-input--background: #000000;
+		--form-input--foreground: #f2f2f2;
+		--form-input--border-color: #f2f2f2;
 	}
 }
 
