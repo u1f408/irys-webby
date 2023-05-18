@@ -172,14 +172,14 @@ body:not(.fw) nav#iryscc-top-nav > .inner
 	max-width: var(--body--width);
 }
 
-@media screen and (max-width: var(--body-width))
+@media screen and (min-width: 64rem)
 {
 	body
 	{
 		padding: 3rem 1rem 1rem 1rem;
 	}
 
-	nav#iryscc-top-nav > .inner
+	body nav#iryscc-top-nav > .inner
 	{
 		margin: 1rem 0;
 		border-radius: 0.25rem;
