@@ -1,0 +1,75 @@
+---
+title: listy
+---
+{% extends "base.njk" %}
+{% block head_extra %}
+<link rel="stylesheet" href="{{ meow.assetBase }}/css/main.css">
+<link rel="stylesheet" href="index.css">
+{% endblock %}
+{% block content %}
+	{% include "nav.njk" %}
+	<h1>listy</h1>
+	<form id="options">
+		<label for="option-token">Token:</label>
+		<input type="password" name="token" id="option-token">
+
+		<br>
+
+		<label class="sr-only" for="option-showpriv">Show members with privacy:</label>
+		<span aria-hidden="true">Show</span>
+		<select id="option-showpriv" name="showpriv">
+			<option value="no">only public</option>
+			<option value="yes">public & private</option>
+			<option value="only">only private</option>
+		</select>
+		<span aria-hidden="true">members</span>
+
+		<br>
+
+		<label for="option-sort">Sort by:</label>
+		<select id="option-sort" name="sort">
+			<option value="name">name</option>
+			<option value="display_name">display name</option>
+			<option value="created">creation date</option>
+			<option value="proxy_tags">proxy tags</option>
+			<option value="pronouns">pronouns</option>
+			<option disabled>---</option>
+			<option value="lmao">API response order</option>
+		</select>
+
+		<label for="option-rev">
+			<input type="checkbox" name="rev" id="option-rev"> Reverse
+		</label>
+
+		<br>
+
+		<label class="sr-only" for="option-display">Additional field to display:</label>
+		<span aria-hidden="true">Also show (in brackets):</span>
+		<select id="option-display" name="display">
+			<option value="proxy_tags">proxy tags</option>
+			<option value="display_name">display name</option>
+			<option value="created">creation date</option>
+			<option value="pronouns">pronouns</option>
+			<option value="color">color</option>
+			<option value="avatar_url">avatar URLs</option>
+		</select>
+
+		<label for="option-avatar">
+			<input type="checkbox" id="option-avatar" name="avatar">
+			Show avatars
+		</label>
+
+		<br>
+
+		<button type="submit">Go</button>
+		<label for="option-localstorage">
+			<input type="checkbox" id="option-localstorage" name="localstorage">
+			Save options to browser
+		</label>
+	</form>
+
+	<div id="listy-list" class="listy-card">
+		Enter your token (and choose your options) above, then click <code>Go</code>.
+	</div>
+	<script src="listy.js" async></script>
+{% endblock %}

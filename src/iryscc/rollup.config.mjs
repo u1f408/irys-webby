@@ -18,4 +18,9 @@ export default defineConfig([
 		input: 'pk/grep/index.tsx',
 		output: ROOT_DIR + '/dist/iryscc/pk/grep/index.js',
 	}),
+    defaultConfig({
+        name: 'listy',
+        input: 'pk/listy/listy.js',
+        output: ROOT_DIR + '/dist/iryscc/pk/listy/listy.js',
+    }),
 ])
