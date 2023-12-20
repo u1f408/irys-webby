@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <title>tiny PK tools: member/group ID lister</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        html { display: flex; flex-flow: column nowrap; margin: 0; }
+        body { flex: 1; font: 100%/1.2 sans-serif; margin: .5rem 1rem; }
+        body > header { margin: 0 0 1rem 0; border-bottom: 1px solid #000; }
+        #app { margin: 1rem 0; padding: 1rem 0; border-top: 1px solid #000; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>tiny PK tools: member/group ID lister</h1>
+        <p>
+            this is a quickly-thrown-together tool by iris, one of the PK devs.
+            other tools by iris, big and small, can be found on
+            <a href="https://irys.cc/#pluralkit" target="_blank">irys.cc</a>.
+        </p>
+    </header>
+    <form id="settings">
+        <label for="f_token">PK token: </label><input id="f_token" type="text" name="token" placeholder="put your token here" required><br>
+        <label for="f_type">type of IDs: </label><select id="f_type" name="type">
+            <option value="members" selected>member IDs</option>
+            <option value="groups">group IDs</option>
+        </select><br>
+        <label for="f_public"><input id="f_public" name="public" type="checkbox"> only list public members/groups?</label><br>
+        <button type="submit">get list of IDs!</button>
+    </form>
+    <div id="app"></div>
+    <script type="text/javascript">
+        document.getElementById("settings").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var appel = document.getElementById("app");
+            function cl(e) { while (e.children.length) e.removeChild(e.children[0]); }
+            function se(t,s) { return Object.assign(document.createElement('span'), { innerText: t, ...(s || {}) }); }
+
+            cl(appel);
+            appel.append(se("please wait, getting your IDs..."));
+
+            fetch("https://api.pluralkit.me/v2/systems/@me/" + e.target.elements['type'].value, {
+                method: "GET",
+                headers: { Authorization: e.target.elements['token'].value },
+            })
+            .then(function(d) {
+                if (!d.ok) {
+                    if (d.status == 401) throw "Authorization error - your token is probably invalid!";
+                    throw "HTTP " + d.status;
+                }
+                return d.json();
+            })
+            .then(function(d) {
+                var _d = d;
+                if (e.target.elements['public'].checked)
+                    _d = _d.filter(function(m) { return m.privacy.visibility === "public" });
+                return _d;
+            })
+            .then(function(d) {
+                cl(appel);
+                let label = "IDs of " + (e.target.elements['public'].checked ? "public" : "all") + " " + e.target.elements['type'].value + ": ";
+                appel.append(se(label, { style: 'font-weight: bold' }));
+                appel.append(...(Array.from(d).map(function(m) { return se(m.id + " "); })));
+            })
+            .catch(function (ex) {
+                let m = se(null);
+                m.append(se("oh no! an error occurred: ", { style: 'font-weight: bold; font-style: oblique' }));
+                m.append(se(ex.toString()));
+                appel.append(m);
+                return false;
+            });
+
+            return false;
+        });
+    </script>
+</body>
+</html>

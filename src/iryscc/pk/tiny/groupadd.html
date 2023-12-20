@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <title>tiny PK tools: mass add members to a group</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        html { display: flex; flex-flow: column nowrap; margin: 0; }
+        body { flex: 1; font: 100%/1.2 sans-serif; margin: .5rem 1rem; }
+        body > header { margin: 0 0 1rem 0; border-bottom: 1px solid #000; }
+        #app { margin: 1rem 0; padding: 1rem 0; border-top: 1px solid #000; }
+        #app > span { display: block; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>tiny PK tools: mass add members to a group</h1>
+        <p>
+            this is a quickly-thrown-together tool by iris, one of the PK devs.
+            other tools by iris, big and small, can be found on
+            <a href="https://irys.cc/#pluralkit" target="_blank">irys.cc</a>.
+        </p>
+    </header>
+    <form id="settings">
+        <label for="f_token">PK token: </label><input id="f_token" name="token" type="text" placeholder="put your token here" required><br>
+        <label for="f_group">Group ID: </label><input id="f_group" name="group" type="text" placeholder="group id" required><br>
+        <label for="f_public"><input id="f_public" name="public" type="checkbox"> Only add public members?</label><br>
+        <button type="submit">add all members to group!</button>
+    </form>
+    <div id="app"></div>
+    <script type="text/javascript">
+        document.getElementById("settings").addEventListener("submit", function(e) {
+            e.preventDefault();
+            let appel = document.getElementById("app");
+            function cl(e) { while (e.children.length) e.removeChild(e.children[0]); }
+            function se(t,s) { return Object.assign(document.createElement('span'), { innerText: t, ...(s || {}) }); }
+
+            cl(appel);
+            appel.append(se("please wait, getting member list..."));
+
+            fetch("https://api.pluralkit.me/v2/systems/@me/members", {
+                method: "GET",
+                headers: { Authorization: e.target.elements['token'].value },
+            })
+            .then(function(d) {
+                if (!d.ok) {
+                    if (d.status == 401) throw "Authorization error - your token is probably invalid!";
+                    throw "HTTP " + d.status;
+                }
+                return d.json();
+            })
+            .then(function(d) {
+                var _d = d;
+                if (e.target.elements['public'].checked)
+                    _d = _d.filter(function(m) { return m.privacy.visibility === "public" });
+                return _d;
+            })
+            .then(function(d) {
+                let group = e.target.elements['group'].value;
+                let idlist = d.map(function(m) { return m.uuid; });
+                appel.append(se(`adding ${idlist.length} members to group ${group}...`));
+
+                return fetch(`https://api.pluralkit.me/v2/groups/${group}/members/overwrite`, {
+                    method: "POST",
+                    body: JSON.stringify(idlist),
+                    headers: { Authorization: e.target.elements['token'].value, "Content-Type": "application/json; charset=utf-8" },
+                })
+                .then(function(r) {
+                    appel.append(se(`done! :)`));
+                });
+            })
+            .catch(function (ex) {
+                let m = se(null);
+                m.append(se("oh no! an error occurred: ", { style: 'font-weight: bold; font-style: oblique' }));
+                m.append(se(ex.toString()));
+                appel.append(m);
+                return false;
+            });
+
+            return false;
+        });
+    </script>
+</body>
+</html>
