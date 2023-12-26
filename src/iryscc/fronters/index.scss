@@ -1,8 +1,41 @@
 :root
 {
+	--page-background: hsla(0, 100%, 100%, 1);
+	--page-foreground: hsla(0, 0%, 0%, 1);
+	--page-link: hsla(200, 100%, 30%, 1);
+	--button-border: hsla(0, 0%, 0%, 1);
+	--button-shadow: hsla(0, 0%, 80%, 0.6);
+	--hoverbox-border: hsla(0, 0%, 40%, 0.75);
+	--field-border: hsla(0, 0%, 40%, 1);
+	--field-label-background: hsla(0, 0%, 95%, 1);
+	--field-label-foreground: hsla(0, 0%, 0%, 1);
+	--field-background: hsla(0, 100%, 100%, 1);
+	--field-foreground: hsla(0, 0%, 0%, 1);
+	--newcard-background: hsla(0, 0%, 94%, 1);
+	--newcard-foreground: hsla(0, 0%, 0%, 1);
 	--focus-color: hsla(16, 100%, 50%, 1);
 	--mobile--avatar-size: 3rem;
 	--desktop--avatar-size: 6rem;
+}
+
+@media (prefers-color-scheme: dark)
+{
+	:root
+	{
+		--page-background: hsla(0, 0%, 8%, 1);
+		--page-foreground: hsla(0, 100%, 100%, 1);
+		--page-link: hsla(200, 100%, 69%, 1);
+		--button-border: hsla(0, 100%, 100%, 1);
+		--button-shadow: hsla(0, 0%, 40%, 0.6);
+		--field-border: hsla(0, 0%, 80%, 1);
+		--field-label-background: hsla(0, 0%, 30%, 1);
+		--field-label-foreground: hsla(0, 100%, 100%, 1);
+		--field-background: hsla(0, 0%, 0%, 1);
+		--field-foreground: hsla(0, 100%, 100%, 1);
+		--newcard-background: hsla(0, 0%, 22%, 1);
+		--newcard-foreground: hsla(0, 100%, 100%, 1);
+		--focus-color: hsla(16, 100%, 50%, 1);
+	}
 }
 
 *,
@@ -25,20 +58,32 @@ body
 	flex-flow: column nowrap;
 	margin: 0;
 	padding: 0;
+	background: var(--page-background);
+	color: var(--page-foreground);
 }
 
 .button
 {
 	display: block;
-	background-color: #fff;
-	color: #000;
+	background-color: var(--page-background);
+	color: var(--page-foreground);
 	border-radius: 2px;
-	border: 1px solid #000;
+	border: 1px solid var(--button-border);
 	padding: 0.175rem 0.375rem;
 
 	&:hover
 	{
-		background-image: linear-gradient(to bottom, transparent, hsla(0, 0%, 80%, 0.6));
+		background-image: linear-gradient(to bottom, transparent, var(--button-shadow));
+	}
+}
+
+a[href ^= "http"],
+.hoverbox a
+{
+	color: var(--page-link);
+	&:visited
+	{
+		color: var(--page-link);
 	}
 }
 
@@ -62,8 +107,9 @@ input:not([type=checkbox]):focus
 
 	width: calc(100vw - 1rem);
 	border-radius: 4px;
-	border: 1px solid hsla(0, 0%, 40%, 0.75);
-	background: #fff;
+	border: 1px solid var(--hoverbox-border);
+	background: var(--page-background);
+	color: var(--page-foreground);
 }
 
 .options-extra
@@ -116,7 +162,7 @@ fieldset
 	height: 3rem;
 	max-height: 3rem;
 
-	border-bottom: 1px solid hsla(0, 0%, 40%, 0.75);
+	border-bottom: 1px solid var(--hoverbox-border);
 
 	h1
 	{
@@ -136,7 +182,7 @@ fieldset
 	{
 		display: flex;
 		flex-flow: row nowrap;
-		border: 1px solid hsla(0, 0%, 40%, 1);
+		border: 1px solid var(--field-border);
 		border-radius: 2px;
 		margin: 0;
 
@@ -146,11 +192,12 @@ fieldset
 			flex-flow: row nowrap;
 			justify-content: baseline;
 			align-items: center;
-			border-right: 1px solid hsla(0, 0%, 40%, 1);
+			border-right: 1px solid var(--field-border);
 			font-size: 0.8em;
 			margin: 0;
 			padding: 0.25rem 0.5rem;
-			background: hsla(0, 0%, 95%, 1);
+			background: var(--field-label-background);
+			color: var(--field-label-foreground);
 		}
 
 		input
@@ -159,6 +206,8 @@ fieldset
 			border: none;
 			margin: 0;
 			padding: 0.25rem 0.5rem;
+			background: var(--field-background);
+			color: var(--field-foreground);
 		}
 	}
 }
@@ -205,8 +254,8 @@ fieldset
 	border: none;
 	border-bottom: 4px solid transparent;
 	border-radius: 4px;
-	background: hsla(0, 0%, 94%, 1);
-	color: hsla(0, 0%, 0%, 1);
+	background: var(--newcard-background);
+	color: var(--newcard-foreground);
 	flex-flow: column nowrap;
 	min-width: 12rem;
 	width: 12rem;
