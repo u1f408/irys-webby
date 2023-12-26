@@ -17,12 +17,14 @@ export class Options {
 	public displayNames: bool
 	public cardBorder: "inner" | "outer"
 	public useNewCard: bool
+	public fallbackAvatarUrl?: string
 
 	constructor() {
 		this.pronouns = true
 		this.displayNames = false
 		this.cardBorder = "inner"
 		this.useNewCard = false
+		this.fallbackAvatarUrl = null
 	}
 
 	parseString(optstr: string): Options {
@@ -63,6 +65,20 @@ export class Options {
 
 		return opts.filter(w => w !== null).join(',')
 	}
+
+	fallbackAvatar(id: string): string {
+		if (this.fallbackAvatarUrl !== null)
+			return this.fallbackAvatarUrl
+
+		let hash = 0
+		for (let i = 0; i < id.lengnth; i++) {
+			const char = str.charCodeAt(i)
+			hash = (hash << 5) - hash + char
+			hash &= hash
+		}
+
+		return `https://cdn.discordapp.com/embed/avatars/${(hash % 5).toString()}.png`
+	}
 }
 
 const memberCardStyle = (member: PKMember, opts: Options): { [key:string]: string } => ({
@@ -72,7 +88,7 @@ const memberCardStyle = (member: PKMember, opts: Options): { [key:string]: strin
 const memberCardAvatarStyle = (member: PKMember, opts: Options): { [key:string]: string } => ({
 	'borderColor': (!opts.useNewCard && opts.cardBorder === "inner") ? "#" + (member.color || '000') : undefined,
 	'borderWidth': (opts.useNewCard || opts.cardBorder === "outer") ? "0px" : undefined,
-	'backgroundImage': `url(${MediaProxyAvatar(member.webhook_avatar_url || member.avatar_url)})`,
+	'backgroundImage': `url(${MediaProxyAvatar(member.webhook_avatar_url || member.avatar_url || opts.fallbackAvatar(member.uuid))})`,
 	'backgroundRepeat': 'no-repeat',
 	'backgroundPosition': 'center center',
 	'backgroundSize': 'cover',
