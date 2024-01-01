@@ -71,13 +71,13 @@ export class Options {
 			return this.fallbackAvatarUrl
 
 		let hash = 0
-		for (let i = 0; i < id.lengnth; i++) {
-			const char = str.charCodeAt(i)
+		for (let i = 0; i < id.length; i++) {
+			const char = id.charCodeAt(i)
 			hash = (hash << 5) - hash + char
 			hash &= hash
 		}
 
-		return `https://cdn.discordapp.com/embed/avatars/${(hash % 5).toString()}.png`
+		return `https://cdn.discordapp.com/embed/avatars/${(Math.abs(hash) % 5).toString()}.png`
 	}
 }
 
