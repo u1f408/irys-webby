@@ -1,7 +1,18 @@
 :root
 {
+	--listy-foreground: hsla(0, 0%, 0%, 1);
 	--listy-background: hsla(220, 15%, 95%, 1);
 	--listy-border-color: hsla(220, 10%, 90%, 1);
+}
+
+@media (prefers-color-scheme: dark)
+{
+	:root
+	{
+		--listy-foreground: hsla(0, 100%, 100%, 1);
+		--listy-background: hsla(225, 6%, 12%, 1);
+		--listy-border-color: hsla(202, 4%, 61%, 1);
+	}
 }
 
 .listy-inline-list,
@@ -30,6 +41,7 @@
 
 .listy-card
 {
+	color: var(--listy-foreground);
 	background: var(--listy-background);
 	border-radius: 3px;
 	border-color: var(--listy-border-color);
@@ -71,6 +83,7 @@
 	background: #000;
 	border-radius: 4px;
 	vertical-align: center;
+	border: 1px solid var(--listy-border-color);
 }
 
 .listy-details-avatar
