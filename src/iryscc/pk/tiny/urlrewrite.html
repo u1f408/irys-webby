@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <title>tiny PK tools: image URL rewriter</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        html { display: flex; flex-flow: column nowrap; margin: 0; }
+        body { flex: 1; font: 100%/1.2 sans-serif; margin: .5rem 1rem; }
+        body > header { margin: 0 0 1rem 0; border-bottom: 1px solid #000; }
+        .viewbox {margin: 0.5rem 0; padding: .5rem; border: 1px solid #000; }
+        #app { margin: 1rem 0; padding: 1rem 0; border-top: 1px solid #000;}
+        #app > span { display: block; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>tiny PK tools: image URL rewriter</h1>
+        <p>
+            this tool rewrites image URLs within PK to point to your own
+            CDN, using the member hid or uuid as a key.
+        </p>
+        <p>
+            this supports member avatars / proxy avatars / banners;
+            and group icons / banners.
+        </p>
+        <p>
+            <strong>BE WARNED: THIS TOOL DOES NOT RE-UPLOAD ANY OF YOUR IMAGES!</strong>
+            this is <strong>ONLY</strong> for use if you already have your own
+            CDN setup, with the images already present. if you don't know what
+            any of this means, this tool is not for you!
+            <strong>
+                PLEASE EXPORT YOUR SYSTEM DATA BEFORE USE!
+                IF THIS BREAKS IT'S NOT MY PROBLEM.
+            </strong>
+        </p>
+        <p>
+            this is a quickly-thrown-together tool by iris, one of the PK devs.
+            other tools by iris, big and small, can be found on
+            <a href="https://irys.cc/#pluralkit" target="_blank">irys.cc</a>.
+        </p>
+    </header>
+    <form id="settings">
+        <label for="f_token">PK token: </label><input id="f_token" type="text" name="token" placeholder="put your token here" required><br>
+        <label for="f_type">object type: </label><select id="f_type" name="type">
+            <option value="members" selected>members</option>
+            <option value="groups">groups</option>
+        </select><br>
+        <label for="f_field">field to rewrite: </label><select id="f_field" name="field">
+            <option value="avatar" selected>main avatar/icon</option>
+            <option value="banner">banner</option>
+            <option value="webhook_avatar">proxy avatar (only for members)</option>
+        </select><br>
+        <label for="f_prefix">URL prefix: </label><input id="f_prefix" name="prefix" type="text" placeholder="https://cdn.example.com/av/" required><br>
+        <label for="f_key">new key: </label><select id="f_key" name="key">
+            <option value="hid" selected>"short" ID (hid; the 5/6 character one)</option>
+            <option value="uuid">UUID</option>
+        </select><br>
+        <label for="f_suffix">URL suffix: </label><input id="f_suffix" name="suffix" type="text" placeholder=".webp" required><br>
+        <div id="url_preview" class="viewbox">
+            <span>(a preview of the URL format will appear here as you populate the above form)<span></span>
+        </div>
+        <button type="submit">start rewriting</button>
+    </form>
+    <div id="app"></div>
+    <script type="text/javascript">
+        window.irysUrlRewrite = {
+            cl: (function cl(e) { while (e.children.length) e.removeChild(e.children[0]); }),
+            se: (function se(t,s) { return Object.assign(document.createElement('span'), { innerText: t, ...(s || {}) }); }),
+            fe: (function fe(f) { return Object.fromEntries((new FormData(f)).entries()); }),
+            appel: (function appel() { return document.getElementById("app"); }),
+            previewel: (function previewel() { return document.getElementById("url_preview"); }),
+            _patchfuncs: [],
+        };
+
+        window.irysUrlRewrite.log = (function log(t,s) {
+            this.appel().append(this.se(t,s));
+        }).bind(window.irysUrlRewrite);
+
+        window.irysUrlRewrite.err = (function err(place) {
+            let _E = this;
+            return (function (ex) {
+                let m = _E.se(null);
+                m.append(se("error (" + place + "): ", { style: 'font-weight: bold; font-style: oblique' }));
+                m.append(se(ex.toString()));
+                _E.appel().append(m);
+                return false;
+            });
+        }).bind(window.irysUrlRewrite);
+
+        window.irysUrlRewrite.genPreview = (function genPreview(params) {
+            let testid = params.key === "hid" ? "abcde" : "de5e8382-ad2a-4b1b-b14b-7a15668b2304";
+            var urlPreview = params.prefix + testid + params.suffix;
+
+            this.cl(this.previewel());
+            this.previewel().append(this.se("URL preview: ", { style: 'font-weight: bold' }));
+            this.previewel().append(this.se(urlPreview));
+        }).bind(window.irysUrlRewrite);
+
+        window.irysUrlRewrite.invokePatch = (function invokePatch() {
+            if (!window.irysUrlRewrite._patchfuncs.length) {
+                this.log("rewrite complete!", { style: 'font-weight: bold' });
+                return;
+            }
+
+            let _E = this;
+            (window.irysUrlRewrite._patchfuncs.shift())().then(function(s) {
+                _E.log("rewrite for " + s[1] + " done, " + window.irysUrlRewrite._patchfuncs.length.toString() + " remaining");
+                setTimeout((function() { window.irysUrlRewrite.invokePatch() }), 350);
+                return;
+            });
+        }).bind(window.irysUrlRewrite);
+
+        window.irysUrlRewrite.doRewrite = (function doRewrite(params) {
+            this.cl(this.appel());
+            this.log("fetching system " + params.type + "...");
+
+            let _E = this;
+            fetch("https://api.pluralkit.me/v2/systems/@me/" + params.type, {
+                method: "GET",
+                headers: { Authorization: params.token },
+            })
+            .then(function(d) {
+                if (!d.ok) {
+                    if (d.status == 401) throw "Authorization error - your token is probably invalid!";
+                    throw "HTTP " + d.status;
+                }
+                return d.json();
+            })
+            .then(function(d) {
+                let idfield = (function(t,f) {
+                    if (f === "hid") return "id";
+                    if (f === "uuid") return "uuid";
+                    throw "unknown object ID key";
+                })(params.type, params.key);
+
+                let keyfield = (function(t,f) {
+                    if (t === "members" && f === "webhook_avatar") return "webhook_avatar_url";
+                    if (t === "members" && f === "avatar") return "avatar_url";
+                    if (t === "groups" && f === "avatar") return "icon";
+                    if (f === "banner") return "banner";
+                    throw "unknown field key for object " + t;
+                })(params.type, params.field);
+
+                _E.log("fetched " + d.length.toString() + " objects, seeing what needs rewriting...");
+
+                let names = Object.fromEntries(d.map(function(o) {
+                    return [o.uuid, "" + (o.name || o.display_name ) + " (" + o.id + ")"];
+                }));
+
+                let patches = d.map(function(o) {
+                    let mutated = params.prefix + o[idfield] + params.suffix;
+                    if (o[keyfield] == mutated) return null;
+
+                    let patch = {};
+                    patch[keyfield] = mutated;
+                    return [o.uuid, patch];
+                }).filter(function(a) { return !!a; });
+
+                _E.log("there are " + patches.length.toString() + " non-matching " + keyfield + " fields");
+                _E._patchfuncs = patches.map(function(s) {
+                    let _P = params;
+                    let _N = names;
+                    return (function() {
+                        return fetch("https://api.pluralkit.me/v2/" + _P.type + "/" + s[0], {
+                            method: "PATCH",
+                            body: JSON.stringify(s[1]),
+                            headers: { Authorization: _P.token, "Content-Type": "application/json; charset=utf-8" },
+                        })
+                        .then(function(d) {
+                            if (!d.ok) throw "HTTP " + d.status;
+                            return [s[0], _N[s[0]]];
+                        })
+                        .catch(_E.err("while rewriting " + _N[s[0]]));
+                    });
+                });
+
+                _E.invokePatch();
+                return true;
+            })
+            .catch(this.err("toplevel"));
+        }).bind(window.irysUrlRewrite);
+
+        Array.from(document.getElementById("settings").elements).forEach(function(s){
+            s.addEventListener("input", function(e) {
+                e.preventDefault();
+                window.irysUrlRewrite.genPreview(window.irysUrlRewrite.fe(e.target.form));
+                return false;
+            });
+        });
+
+        document.getElementById("settings").addEventListener("submit", function(e) {
+            e.preventDefault();
+            window.irysUrlRewrite.doRewrite(window.irysUrlRewrite.fe(e.target));
+            return false;
+        });
+    </script>
+</body>
+</html>
