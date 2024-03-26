@@ -58,6 +58,7 @@
             <option value="uuid">UUID</option>
         </select><br>
         <label for="f_suffix">URL suffix: </label><input id="f_suffix" name="suffix" type="text" placeholder=".webp" required><br>
+        <label for="f_onlyexist"><input id="f_onlyexist" name="onlyexist" type="checkbox" checked> only rewrite if field already has a value?</label><br>
         <div id="url_preview" class="viewbox">
             <span>(a preview of the URL format will appear here as you populate the above form)<span></span>
         </div>
@@ -150,6 +151,7 @@
                 }));
 
                 let patches = d.map(function(o) {
+                    if (params.onlyexist && !(o[keyfield])) return null;
                     let mutated = params.prefix + o[idfield] + params.suffix;
                     if (o[keyfield] == mutated) return null;
 

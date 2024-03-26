@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, width=device-width">
-    <title>tiny PK tools: group member ID lister</title>
+    <title>tiny PK tools: quick group member lister</title>
     <style>
         *, *::before, *::after { box-sizing: border-box; }
         html { display: flex; flex-flow: column nowrap; margin: 0; }
@@ -14,12 +14,14 @@
 </head>
 <body>
     <header>
-        <h1>tiny PK tools: group member ID lister</h1>
+        <h1>tiny PK tools: quick group member lister</h1>
         <p>
-            this lists the member IDs of the members in a given PK group.
-            if you want to list the IDs of <em>all</em> members,
-            or all groups, you'll want to use the
-            <a href="/pk/tiny/idlister/">member/group ID lister</a> instead.
+            this tool lists either the member IDs, or the base names,
+            of all members <em>within a given PK group</em>
+            if you want to list the IDs/names of <em>all</em>
+            members or groups within your PK system,
+            you'll want to use the
+            <a href="/pk/tiny/quicklist/">quick member/group lister</a> instead.
         </p>
         <p>
             this is a quickly-thrown-together tool by iris, one of the PK devs.
@@ -29,9 +31,14 @@
     </header>
     <form id="settings">
         <label for="f_token">PK token: </label><input id="f_token" type="text" name="token" placeholder="put your token here" required><br>
-        <label for="f_group">Group ID: </label><input id="f_group" name="group" type="text" placeholder="group id" required><br>
-        <label for="f_public"><input id="f_public" name="public" type="checkbox"> only list public members of this group?</label><br>
-        <button type="submit">get list of IDs!</button>
+        <label for="f_group">group ID: </label><input id="f_group" type="text" name="group" placeholder="group ID goes here" required><br>
+        <label for="f_field">what field to list: </label><select id="f_field" name="field">
+            <option value="id" selected>IDs</option>
+            <option value="name">base names</option>
+        </select><br>
+        <label for="f_public"><input id="f_public" name="public" type="checkbox"> only list public members of the group?</label><br>
+        <label for="f_newline"><input id="f_newline" name="newline" type="checkbox"> put each name/ID on a separate line</label><br>
+        <button type="submit">give me a list!</button>
     </form>
     <div id="app"></div>
     <script type="text/javascript">
@@ -42,7 +49,13 @@
             function se(t,s) { return Object.assign(document.createElement('span'), { innerText: t, ...(s || {}) }); }
 
             cl(appel);
-            appel.append(se("please wait, getting your IDs..."));
+            appel.append(se("please wait, retrieving the list..."));
+
+            var field = e.target.elements['field'].value;
+            var fieldFriendly = ({
+                id: "IDs",
+                name: "Base names",
+            })[field];
 
             fetch("https://api.pluralkit.me/v2/groups/" + e.target.elements['group'].value + "/members", {
                 method: "GET",
@@ -63,9 +76,13 @@
             })
             .then(function(d) {
                 cl(appel);
-                let label = "IDs of " + (e.target.elements['public'].checked ? "public" : "all") + " members of group " + e.target.elements['group'].value + ": ";
+                let label = fieldFriendly + " of " + (e.target.elements['public'].checked ? "public" : "all") + " members of group " + e.target.elements['group'].value + ": ";
                 appel.append(se(label, { style: 'font-weight: bold' }));
-                appel.append(...(Array.from(d).map(function(m) { return se(m.id + " "); })));
+                appel.append(...(Array.from(d).map(function(m) {
+                    var val = m[field];
+                    if (val.indexOf(" ") != -1) val = '"' + val + '"';
+                    return se(val + ' ', { style: (e.target.elements['newline'].checked ? "display: block" : ""), });
+                })));
             })
             .catch(function (ex) {
                 let m = se(null);
