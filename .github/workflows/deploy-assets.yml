@@ -28,5 +28,4 @@ jobs:
         accessKey: "${{ secrets.ASSETS_BUNNYCDN_STORAGE_KEY }}"
         pullZoneId: "${{ secrets.ASSETS_BUNNYCDN_PULLZONE_ID }}"
         pullZoneAccessKey: "${{ secrets.BUNNYCDN_API_KEY }}"
-        remove: "true"
         purge: "true"

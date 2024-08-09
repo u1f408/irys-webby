@@ -13,6 +13,11 @@ export default defineConfig([
 		input: 'fronters/pkfronters.tsx',
 		output: ROOT_DIR + '/dist/iryscc/fronters/pkfronters.js',
 	}),
+    defaultConfig({
+        name: 'pkswitcher',
+        input: 'switch/app.js',
+        output: ROOT_DIR + '/dist/iryscc/switch/app.js',
+    }),
 	defaultConfig({
 		name: 'pkgrep',
 		input: 'pk/grep/index.tsx',

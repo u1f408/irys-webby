@@ -1,0 +1,25 @@
+:root
+{
+	--font-size: 100%;
+	--font-stack: sans-serif;
+	--color-background-prominent: hsla(0, 30%, 30%, 1);
+	--color-background: hsla(220, 100%, 5%, 1);
+	--color-foreground: hsla(220, 100%, 95%, 1);
+	--color-dialog-border: hsla(0, 100%, 100%, 0.95);
+	--color-dialog-background: hsla(220, 30%, 30%, 0.95);
+	--color-dialog-foreground: hsla(220, 100%, 95%, 1);
+	--color-member-border: hsla(0, 100%, 100%, 1);
+	--color-member-background: hsla(0, 100%, 100%, 0.95);
+	--color-member-foreground: hsla(220, 100%, 5%, 1);
+	--color-button-border: hsla(0, 100%, 100%, 0.95);
+	--color-button-background: hsla(220, 100%, 95%, 0.95);
+	--color-button-foreground: hsla(220, 100%, 5%, 1);
+	--color-button-primary-background: hsla(150, 60%, 30%, 1);
+	--color-button-primary-foreground: hsla(150, 100%, 95%, 1);
+	--color-button-danger-background: hsla(0, 60%, 30%, 1);
+	--color-button-danger-foreground: hsla(0, 100%, 95%, 1);
+	--color-nav-background: hsla(200, 30%, 35%, 1);
+	--color-nav-foreground: hsla(200, 30%, 95%, 1);
+	--color-nav-focused-background: hsla(0, 100%, 100%, 0.1);
+	--color-form-input-border: hsla(0, 0%, 0%, 0.95);
+}
