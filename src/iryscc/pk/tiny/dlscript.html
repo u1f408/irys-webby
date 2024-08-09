@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <title>tiny PK tools: image download script generator</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        html { display: flex; flex-flow: column nowrap; margin: 0; }
+        body { flex: 1; font: 100%/1.2 sans-serif; margin: .5rem 1rem; }
+        sup { font-size: 0.7rem; }
+        body > header, body > aside { margin: 0 0 1rem 0; border-bottom: 1px solid #000; }
+        .viewbox { margin: 0.5rem 0; padding: .5rem; border: 1px solid #000; }
+        #app { margin: 1rem 0; padding: 1rem 0; border-top: 1px solid #000;}
+        #app > span { display: block; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>tiny PK tools: image download script generator</h1>
+        <p>
+            this tool generates a Python script that downloads images
+            from your PK system to your computer.
+        </p>
+        <p>
+            <strong>this does not work on mobile devices,</strong>
+            and will only work if you <strong>already have Python 3
+            installed on your computer!</strong> if you have a Mac
+            or a Linux machine, you probably already have Python.
+            if you use Windows, you probably don't.
+        </p>
+        <p>
+            <strong>THIS TOOL IS EXPERIMENTAL!</strong>
+            it <em>probably</em> won't break anything, but it's not
+            my problem if it does. we will not provide support for
+            this tool, you're on your own if it breaks. sorry.
+        </p>
+        <p>
+            this is a quickly-thrown-together tool by iris, one of the PK devs.
+            other tools by iris, big and small, can be found on
+            <a href="https://irys.cc/#pluralkit" target="_blank">irys.cc</a>.
+        </p>
+    </header>
+
+    <aside id="templateinfo">
+        <strong>filename template info:</strong><br>
+        <p>
+            base names have the following characters removed
+            (as these characters are not allowed in file names):
+            <code>! ? * ~ # : | \ / &lt; &gt;</code>
+        </p>
+        <p>
+            the following replacements are available in the template:
+            <ul>
+                <li><code>{otype}</code> - replaced with "Member" or "Group" <sup>[1]</sup></li>
+                <li><code>{ftype}</code> - replaced with the image type ("Avatar" / "Icon" / "ProxyAvatar" / "Banner") <sup>[1]</sup></li>
+                <li><code>{name}</code> - replaced with the base name of the member/group</li>
+                <li><code>{hid}</code> - replaced with the "short" ID (5 or 6 characters) of the member/group</li>
+                <li><code>{uuid}</code> - replaced with the UUID of the member/group</li>
+            </ul>
+
+            <span><sup>[1]</sup> add <code>r</code> to the start of the tag (<code>{rotype}</code> or <code>{rftype}</code>) for snake_case formatted values</span>
+        </p>
+    </aside>
+
+    <form id="settings">
+        <label for="f_token">PK token: </label><input id="f_token" type="text" name="token" placeholder="put your token here" required><br>
+        <label for="f_privlevel">privacy level filter:</label><select id="f_privlevel" name="privlevel">
+            <option value="all" selected>public and private</option>
+            <option value="public">only public</option>
+            <option value="private">only private</option>
+        </select><br>
+        <label for="f_field">type of images to download: </label><select id="f_field" name="field">
+            <option value="member_avatar" selected>member avatars</option>
+            <option value="member_proxy_avatar">member proxy avatars</option>
+            <option value="member_banner">member banners</option>
+            <option value="group_icon">group icons</option>
+            <option value="group_banner">group banners</option>
+        </select><br>
+        <label for="f_fntemplate">filename template (excluding file extension): </label><input id="f_fntemplate" name="fntemplate" placeholder="e.g. {ftype} {name}" required><br>
+        <div id="url_preview" class="viewbox"></div>
+        <button type="submit">generate script</button>
+    </form>
+
+    <div id="app">
+        <span>(once you click "generate script" above, some info will appear here)</span>
+    </div>
+
+    <script id="pytemplate" type="application/octet-stream">
+        IyEvdXNyL2Jpbi9lbnYgcHl0aG9uMwojIEdFTkVSQVRFRCBGSUxFLCBETyBOT1QgRURJVAoKVVNFUl9BR0VOVCA9ICJpcnlzLXBrLWRsc2NyaXB0LzAuMSAoaHR0cHM6Ly9iZXRhLmlyeXMuY2MvcGsvdGlueS9kbHNjcmlwdC8pIgpJTlBVVF9EQVRBID0gIiIiCi0tLUpTT04tLS0KIiIiLnN0cmlwKCkKCmltcG9ydCBqc29uCmltcG9ydCBtaW1ldHlwZXMKZnJvbSB1cmxsaWIucGFyc2UgaW1wb3J0IHVybHBhcnNlCmZyb20gdXJsbGliLnJlcXVlc3QgaW1wb3J0IFJlcXVlc3QsIHVybG9wZW4KZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCgpkZWYgZ3JhYihwcmVmaXgsIGJhc2VmbiwgdXJsKToKICAgIHJlcSA9IFJlcXVlc3QodXJsLCBoZWFkZXJzPXsiVXNlci1BZ2VudCI6IFVTRVJfQUdFTlR9KQogICAgd2l0aCB1cmxvcGVuKHJlcSkgYXMgcmVzcDoKICAgICAgICBpZiByZXNwLnN0YXR1cyAhPSAyMDA6CiAgICAgICAgICAgIHJhaXNlIGYicmVzcG9uZGVkIHdpdGggc3RhdHVzIHtyZXNwLnN0YXR1c30iCgogICAgICAgIGN0eXBlID0gc3RyKHJlc3AuaGVhZGVycy5nZXQoJ0NvbnRlbnQtVHlwZScsICcnKSkuc3BsaXQoJzsnLCAyKVswXQogICAgICAgIG91dGV4dHMgPSBbIG1pbWV0eXBlcy5ndWVzc19leHRlbnNpb24oY3R5cGUpLCB1cmxwYXJzZSh1cmwpLnBhdGgucnNwbGl0KCcuJywgMilbLTFdLCBdCiAgICAgICAgb3V0Zm4gPSBQYXRoKHByZWZpeCkgLyAoYmFzZWZuICsgW3ggZm9yIHggaW4gb3V0ZXh0cyBpZiAobm90IG5vdCB4KV1bMF0pCgogICAgICAgIHByaW50KGYic2F2aW5nIHtvdXRmbi5uYW1lfSIpCiAgICAgICAgd2l0aCBvcGVuKHN0cihvdXRmbiksICd3YicpIGFzIGZkOgogICAgICAgICAgICB3aGlsZSBUcnVlOgogICAgICAgICAgICAgICAgY2h1bmsgPSByZXNwLnJlYWQoMTI4KQogICAgICAgICAgICAgICAgaWYgY2h1bmsgPT0gYicnOgogICAgICAgICAgICAgICAgICAgIGJyZWFrCiAgICAgICAgICAgICAgICBmZC53cml0ZShjaHVuaykKCmRlZiBydW4oZGF0YSk6CiAgICBwcmVmaXggPSBQYXRoKCcuJykKICAgIGZvciBiYXNlZm4sIHVybCBpbiBkYXRhLml0ZW1zKCk6CiAgICAgICAgdHJ5OgogICAgICAgICAgICBncmFiKHByZWZpeCwgYmFzZWZuLCB1cmwpCiAgICAgICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBleDoKICAgICAgICAgICAgcHJpbnQoZiJmYWlsZWQgZ3JhYmJpbmcge3VybH06IHtyZXByKGV4KX0iKQoKaWYgX19uYW1lX18gPT0gIl9fbWFpbl9fIjoKICAgIHJ1bihqc29uLmxvYWRzKElOUFVUX0RBVEEpKQo=
+    </script>
+
+    <script type="text/javascript">
+        window.irysDlScript = {
+            cl: (function cl(e) { while (e.children.length) e.removeChild(e.children[0]); }),
+            se: (function se(t,s) { return Object.assign(document.createElement('span'), { innerText: t, ...(s || {}) }); }),
+            fe: (function fe(f) { return Object.fromEntries((new FormData(f)).entries()); }),
+            appel: (function appel() { return document.getElementById("app"); }),
+            previewel: (function previewel() { return document.getElementById("url_preview"); }),
+            safefn: (function safefn(s) { return s.replaceAll(/[\\\/\<\>\:\|\?\*\!\~\#]/gi, '').trim(); }),
+        };
+
+        window.irysDlScript.scriptTemplate = (function(tx) {
+            const binString = atob(tx);
+            let decoded = Uint8Array.from(binString, (m) => m.codePointAt(0));
+            return (new TextDecoder()).decode(decoded);
+        })(document.getElementById("pytemplate").innerText.trim());
+
+        window.irysDlScript.log = (function log(t,s) {
+            this.appel().append(this.se(t,s));
+        }).bind(window.irysDlScript);
+
+        window.irysDlScript.err = (function err(place) {
+            let _E = this;
+            return (function (ex) {
+                let m = _E.se(null);
+                m.append(_E.se("error (" + place + "): ", { style: 'font-weight: bold; font-style: oblique' }));
+                m.append(_E.se(ex.toString()));
+                _E.appel().append(m);
+                return false;
+            });
+        }).bind(window.irysDlScript);
+
+        window.irysDlScript.makeParams = (function makeParams(frm) {
+            let rd = this.fe(frm);
+            let fs = rd.field.indexOf("_");
+            return {
+                fntemplate: rd.fntemplate,
+                rd: (function _rd() { return Object.fromEntries(Object.entries(rd)); }),
+
+                otype: rd.field.substring(0, 1).toUpperCase() + rd.field.substring(1, fs),
+                rotype: rd.field.substring(0, fs),
+                ftype: Array.from(rd.field.substring(fs + 1).split("_")).map(function(x) { return x.substring(0, 1).toUpperCase() + x.substring(1) }).join(""),
+                rftype: rd.field.substring(fs + 1),
+            };
+        }).bind(window.irysDlScript);
+
+        window.irysDlScript.doTemplate = (function doTemplate(tpl, data) {
+            var out = "" + tpl;
+            Array.from(Object.entries(data)).forEach(function(x) {
+                out = out.replace('{' + x[0] + '}', x[1]);
+            });
+            return out;
+        }).bind(window.irysDlScript);
+
+        window.irysDlScript.genPreview = (function genPreview(params) {
+            this.cl(this.previewel());
+            if ((params.fntemplate || '').trim().length === 0) {
+                this.previewel().append(this.se("(a preview of the generated filenames will appear here as you populate the above form)"));
+                return;
+            }
+
+            let generatedFn = this.doTemplate(params.fntemplate, {
+                hid: "abcdef",
+                uuid: "de5e8382-ad2a-4b1b-b14b-7a15668b2304",
+                name: "TestName",
+                ...params
+            });
+
+            this.previewel().append(this.se("Filename preview: ", { style: 'font-weight: bold' }));
+            this.previewel().append(this.se(generatedFn + ".png", { style: 'font: monospace' }));
+        }).bind(window.irysDlScript);
+
+        window.irysDlScript.doScriptGen = (function doScriptGen(params) {
+            this.cl(this.appel());
+            this.log("fetching system " + params.rotype + "s...");
+
+            let _E = this;
+            fetch("https://api.pluralkit.me/v2/systems/@me/" + params.rotype + "s", {
+                method: "GET",
+                headers: { Authorization: params.rd().token },
+            })
+            .then(function(d) {
+                if (!d.ok) {
+                    if (d.status == 401) throw "Authorization error - your token is probably invalid!";
+                    throw "HTTP " + d.status;
+                }
+                return d.json();
+            })
+            .then(function(d) {
+                let privlevel = params.rd().privlevel;
+                if (privlevel === "all") return d;
+                return d.map(function(o) {
+                    if (o.privacy.visibility !== privlevel) return null;
+                    return o;
+                }).filter(function(a) { return !!a; });
+            })
+            .then(function(d) {
+                _E.log("fetched " + d.length + " " + params.rotype + "s (after privacy filter)");
+                if (d.length === 0) throw "script generation cancelled: nothing to download!";
+                return d;
+            })
+            .then(function(d) {
+                let keyfield = (function(t,f) {
+                    if (t === "member" && f === "proxy_avatar") return "webhook_avatar_url";
+                    if (t === "member" && f === "avatar") return "avatar_url";
+                    if (t === "group" && f === "avatar") return "icon";
+                    if (f === "banner") return "banner";
+                    throw "unknown field key for object " + t;
+                })(params.rotype, params.rftype);
+
+                return Object.fromEntries(d.map(function(o) {
+                    if (o[keyfield] === null) return null;
+                    let odata = {
+                        hid: o.id,
+                        uuid: o.uuid,
+                        name: o.name,
+                        ...params
+                    };
+
+                    return [ _E.safefn(_E.doTemplate(params.fntemplate, odata)), o[keyfield] ];
+                }).filter(function(a) { return !!a; }));
+            })
+            .then(function(d) {
+                _E.log("there are " + Object.entries(d).length + " " + params.rotype + "s with downloadable " + params.ftype + " images.");
+                if (Object.entries(d).length === 0) throw "script generation cancelled: nothing to download!";
+                return d;
+            })
+            .then(function(d) {
+                let outdata = JSON.stringify(d);
+                let script = _E.scriptTemplate.replace("---JSON---", outdata);
+                let filename = "PKImageDownload_" + (0 + (new Date()).valueOf()) + ".py";
+                let blob = new Blob([script], { type: "text/x-python", });
+
+                var e = document.createEvent('MouseEvents'), a = document.createElement('a');
+                a.innerText = filename;
+                a.download = filename;
+                a.href = window.URL.createObjectURL(blob);
+                a.dataset.downloadurl = ['text/x-python', a.download, a.href].join(':');
+                e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                a.dispatchEvent(e);
+
+                var lm = _E.se(null);
+                lm.append(_E.se("to download the final script, click here: "));
+                lm.append(a);
+                _E.appel().append(lm);
+            })
+            .catch(this.err("toplevel"));
+        }).bind(window.irysDlScript);
+
+        Array.from(document.getElementById("settings").elements).forEach(function(s){
+            s.addEventListener("input", function(e) {
+                e.preventDefault();
+                window.irysDlScript.genPreview(window.irysDlScript.makeParams(e.target.form));
+                return false;
+            });
+        });
+
+        document.getElementById("settings").addEventListener("submit", function(e) {
+            e.preventDefault();
+            window.irysDlScript.doScriptGen(window.irysDlScript.makeParams(e.target));
+            return false;
+        });
+
+        window.irysDlScript.genPreview(window.irysDlScript.makeParams(document.getElementById("settings")));
+    </script>
+</body>
+</html>
