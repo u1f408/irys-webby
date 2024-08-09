@@ -1,11 +1,14 @@
 import { g, x, s } from "@xeserv/xeact"
 import { jsx } from "@meow/lib/jsx-runtime"
 import { MediaProxyAvatar } from '@meow/lib/utils/media_proxy'
-import PluralKitAPI, { PKClient, PKError, type PKMember } from '@meow/lib/pluralkit'
+import PluralKitAPI, { PK_API_BASE_URL, PK_BETA_API_BASE_URL, MemoryCache, PKError, type PKMember } from '@meow/lib/pluralkit'
 import Markdown from '@meow/lib/markdown'
 
 const mkdnInline = (new Markdown()).removeRule('paragraph')
 const mkdn = new Markdown()
+
+let PKClient = (new PluralKitAPI(null, PK_API_BASE_URL)).withCache(new MemoryCache())
+export { PKClient }
 
 export enum DisplayType {
 	LIST = 0,
@@ -185,6 +188,16 @@ export const renderAll = async () => {
 		let type = DisplayType[(el.dataset.pkfrontersType || 'LIST').toUpperCase()]
 		return render(el.dataset.pkfrontersSystem, el, type, opts)
 	}))
+}
+
+// allow changing PK API base URL at script load
+if (typeof document.currentScript.dataset.pkfrontersApiBase === "string") {
+	var base = document.currentScript.dataset.pkfrontersApiBase;
+	if (base === "beta") {
+		base = PK_BETA_API_BASE_URL
+	}
+
+	PKClient.apiBase = base
 }
 
 // render all available on script load, if we're not prohibited from doing so

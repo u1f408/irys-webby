@@ -1,7 +1,7 @@
 import { g, x, n } from "@xeserv/xeact"
 import { jsx } from "@meow/lib/jsx-runtime"
-import { render, DisplayType, Options } from "./pkfronters.tsx"
-import PluralKitAPI, { PKClient, PKError, type PKMember } from '@meow/lib/pluralkit'
+import { PKClient, render, DisplayType, Options } from "./pkfronters.tsx"
+export { PKClient }
 
 export const OnHashChange = (hash: string): Promise<void> => {
 	const optform = g("app-options")

@@ -7,12 +7,17 @@ export { MemoryCache }
 import { PKError } from "./types"
 export { PKError }
 
+export const PK_API_BASE_URL: string = "https://api.pluralkit.me/v2";
+export const PK_BETA_API_BASE_URL: string = "https://api.beta.pluralkit.me/v2";
+
 export default class PluralKitAPI {
 	readonly #token?: string
 	#cache?: IPluralKitAPICache
+	apiBase: string
 
-	constructor(token: string | null = null, readonly apiBase: string = "https://api.pluralkit.me/v2") {
+	constructor(token: string | null = null, apiBase: string = PK_API_BASE_URL) {
 		this.#token = token
+		this.apiBase = apiBase
 	}
 
 	setCache(cache: IPluralKitAPICache) {
