@@ -57,9 +57,12 @@
                 name: "Base names",
             })[field];
 
-            fetch("https://api.pluralkit.me/v2/groups/" + e.target.elements['group'].value + "/members", {
+            var apiBase = (new URL(window.location)).searchParams.get('apibase') || 'https://api.pluralkit.me';
+            var apiKey = e.target.elements['token'].value;
+            if (apiKey.startsWith("pkapi:")) apiKey = 'Bearer ' + apiKey;
+            fetch(apiBase + "/v2/groups/" + e.target.elements['group'].value + "/members", {
                 method: "GET",
-                headers: { Authorization: e.target.elements['token'].value },
+                headers: { Authorization: apiKey },
             })
             .then(function(d) {
                 if (!d.ok) {

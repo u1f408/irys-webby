@@ -38,8 +38,12 @@ export default class PluralKitAPI {
 			'Accept': 'application/json'
 		}
 
-		if (this.#token !== null)
-			headers['Authorization'] = this.#token;
+		if (this.#token !== null) {
+			if (this.#token.startsWith("pkapi:"))
+				headers['Authorization'] = `Bearer ${this.#token}`;
+			else
+				headers['Authorization'] = this.#token;
+		}
 
 		return headers
 	}

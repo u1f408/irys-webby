@@ -87,11 +87,15 @@ const init = () => {
 	if (window.location.hash !== "")
 		setTimeout(0, () => OnHashChange(window.location.hash))
 
-	const params = (new URL(document.location)).searchParams
+	const params = (new URL(window.location)).searchParams
 	if (params.get('noui') === null) {
 		g("app-header").classList.remove("hidden")
 		g("app-btnOptions").addEventListener('click', () => toggleOptions())
 		g("app-options").addEventListener('submit', (ev) => onOptionSubmit(ev), false)
+	}
+
+	if (params.get('apibase') !== null) {
+		PKClient.apiBase = params.get('apibase') + '/v2';
 	}
 
 	document.body.classList.add("pkfronters-loaded")

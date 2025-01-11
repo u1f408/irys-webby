@@ -118,9 +118,12 @@
             this.log("fetching system " + params.type + "...");
 
             let _E = this;
-            fetch("https://api.pluralkit.me/v2/systems/@me/" + params.type, {
+            var apiBase = (new URL(window.location)).searchParams.get('apibase') || 'https://api.pluralkit.me';
+            var apiKey = params.token;
+            if (apiKey.startsWith("pkapi:")) apiKey = 'Bearer ' + apiKey;
+            fetch(apiBase + "/v2/systems/@me/" + params.type, {
                 method: "GET",
-                headers: { Authorization: params.token },
+                headers: { Authorization: apiKey },
             })
             .then(function(d) {
                 if (!d.ok) {
@@ -165,7 +168,7 @@
                     let _P = params;
                     let _N = names;
                     return (function() {
-                        return fetch("https://api.pluralkit.me/v2/" + _P.type + "/" + s[0], {
+                        return fetch(apiBase + "/v2/" + _P.type + "/" + s[0], {
                             method: "PATCH",
                             body: JSON.stringify(s[1]),
                             headers: { Authorization: _P.token, "Content-Type": "application/json; charset=utf-8" },

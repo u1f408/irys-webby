@@ -39,9 +39,12 @@
             cl(appel);
             appel.append(se("please wait, getting member list..."));
 
-            fetch("https://api.pluralkit.me/v2/systems/@me/members", {
+            var apiBase = (new URL(window.location)).searchParams.get('apibase') || 'https://api.pluralkit.me';
+            var apiKey = e.target.elements['token'].value;
+            if (apiKey.startsWith("pkapi:")) apiKey = 'Bearer ' + apiKey;
+            fetch(apiBase + "/v2/systems/@me/members", {
                 method: "GET",
-                headers: { Authorization: e.target.elements['token'].value },
+                headers: { Authorization: apiKey },
             })
             .then(function(d) {
                 if (!d.ok) {
@@ -61,7 +64,7 @@
                 let idlist = d.map(function(m) { return m.uuid; });
                 appel.append(se(`adding ${idlist.length} members to group ${group}...`));
 
-                return fetch(`https://api.pluralkit.me/v2/groups/${group}/members/overwrite`, {
+                return fetch(`${apiBase}/v2/groups/${group}/members/overwrite`, {
                     method: "POST",
                     body: JSON.stringify(idlist),
                     headers: { Authorization: e.target.elements['token'].value, "Content-Type": "application/json; charset=utf-8" },

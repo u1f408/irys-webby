@@ -168,9 +168,12 @@
             this.log("fetching system " + params.rotype + "s...");
 
             let _E = this;
-            fetch("https://api.pluralkit.me/v2/systems/@me/" + params.rotype + "s", {
+            var apiBase = (new URL(window.location)).searchParams.get('apibase') || 'https://api.pluralkit.me';
+            var apiKey = params.rd().token;
+            if (apiKey.startsWith("pkapi:")) apiKey = 'Bearer ' + apiKey;
+            fetch(apiBase + "/v2/systems/@me/" + params.rotype + "s", {
                 method: "GET",
-                headers: { Authorization: params.rd().token },
+                headers: { Authorization: apiKey },
             })
             .then(function(d) {
                 if (!d.ok) {
