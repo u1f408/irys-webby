@@ -5,6 +5,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>{{ title }}</title>
 	{% block head_extra %}{% endblock %}
+    {% if meow.isDeploymentBuild %}
+    <script defer src="https://analytics.soupnet.cc/script.js" data-website-id="641a68df-cc9d-442a-908b-97f9025f249d"></script>
+    {% endif %}
 </head>
 <body {% block body_attrs %}{% endblock %}>
 	{% block content %}
