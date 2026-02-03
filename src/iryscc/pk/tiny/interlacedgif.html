@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <title>tiny PK tools: interlaced GIF checker</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        html { display: flex; flex-flow: column nowrap; margin: 0; }
+        body { flex: 1; font: 100%/1.2 sans-serif; margin: .5rem 1rem; }
+        body > header { margin: 0 0 1rem 0; border-bottom: 1px solid #000; }
+        #app { margin: 1rem 0; padding: 1rem 0; border-top: 1px solid #000; }
+        span.debug { display: block; color: #666; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>tiny PK tools: interlaced GIF checker</h1>
+        <p>
+            this is a quickly-thrown-together tool by iris, one of the PK devs.
+            other tools by iris, big and small, can be found on
+            <a href="https://irys.cc/#pluralkit" target="_blank">irys.cc</a>.
+        </p>
+        <p>
+            this will tell you if a GIF is interlaced or not. interlaced GIFs
+            sometimes have issues when uploaded to the PluralKit CDN, and trying
+            to figure out if a GIF is interlaced can be annoying, so this tool
+            will let you easily check.
+        </p>
+        <p>
+            <strong>if this tool breaks, please let me know!</strong>
+            the GIF parsing code in here is <em>really</em> hacky - i've tried
+            to test it a bunch, but who knows what might go wrong.
+        </p>
+        <p><strong>
+            this tool runs entirely locally - your GIFs never leave your browser!
+        </strong></p>
+    </header>
+    <form id="settings">
+        <label for="f_file">select a GIF: </label><input id="f_file" type="file" name="file" required><br>
+        <button type="submit">check please!</button>
+    </form>
+    <div id="app"></div>
+    <script type="text/javascript">
+        document.getElementById("settings").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var appel = document.getElementById("app");
+            function cl(e) { while (e.children.length) e.removeChild(e.children[0]); }
+            function el(t,s,c=[]) { let n = Object.assign(document.createElement(t), s || {}); n.append(...c); return n; }
+            function se(t,s={}) { return el('span', { innerText: t, ...(s || {}) }); }
+            function dse(t) { return se("[debug] " + t, { className: 'debug' }); }
+            function h(n) { return "0x" + ((n >>> 0) & 0xff).toString(16); }
+            function ha(n) { return Array.from(n).map(function(x) { return ((x >>> 0) & 0xff).toString(16); }).join(" "); }
+
+            cl(appel);
+            var file = e.target.elements['file'].files[0];
+
+            file.arrayBuffer()
+            .then(function(d) { return new Int8Array(d); })
+            .then(function(d) {
+                if (ha(d.subarray(0, 3)) !== "47 49 46") {
+                    throw "not a GIF!";
+                }
+
+                var idOffset = 13;
+
+                // check for GCT
+                var lsdByte = d.at(10);
+                appel.append(dse("lsdByte " + h(lsdByte)));
+                if ((lsdByte & 0x80) != 0) {
+                    var gctLength = 3 * (1 << ((lsdByte & 0x07) + 1));
+                    appel.append(dse("image has GCT, length " + gctLength));
+                    idOffset += gctLength;
+                }
+
+                // check for GCE
+                appel.append(dse("gce? " + ha(d.subarray(idOffset, idOffset + 2))));
+                if (ha(d.subarray(idOffset, idOffset + 2)) === "21 f9") {
+                    var gceLength = d.at(idOffset + 2);
+                    appel.append(dse("image has GCE, length " + gceLength));
+                    idOffset += 4 + gceLength;
+                }
+
+                appel.append(dse("start of image descriptor block at " + h(idOffset) + " start byte " + h(d.at(idOffset))));
+
+                var bitfield = d.at(idOffset + 9);
+                appel.append(dse("bitfield " + h(bitfield)));
+                var isInterlaced = (bitfield & 0x40) != 0;
+                let m = el("div");
+                m.append(se("GIF file "));
+                m.append(el("code", { innerText: file.name }));
+                m.append(se(" "));
+                m.append(se("is " + (isInterlaced ? "" : "NOT ") + "interlaced!", { style: 'font-weight: bold' }));
+                appel.append(m);
+            })
+            .catch(function (ex) {
+                let m = el("div");
+                m.append(se("oh no! an error occurred: ", { style: 'font-weight: bold; font-style: oblique' }));
+                m.append(se(ex.toString()));
+                appel.append(m);
+                return false;
+            });
+
+            return false;
+        });
+    </script>
+</body>
+</html>
