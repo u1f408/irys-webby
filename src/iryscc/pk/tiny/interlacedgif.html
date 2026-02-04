@@ -48,9 +48,10 @@
             function cl(e) { while (e.children.length) e.removeChild(e.children[0]); }
             function el(t,s,c=[]) { let n = Object.assign(document.createElement(t), s || {}); n.append(...c); return n; }
             function se(t,s={}) { return el('span', { innerText: t, ...(s || {}) }); }
-            function dse(t) { return se("[debug] " + t, { className: 'debug' }); }
-            function h(n) { return "0x" + ((n >>> 0) & 0xff).toString(16); }
-            function ha(n) { return Array.from(n).map(function(x) { return ((x >>> 0) & 0xff).toString(16); }).join(" "); }
+            function h(n, f=true) { return (f ? "0x" : "") + n.toString(16); }
+            function hb(n, f=false) { return h((n >>> 0) & 0xff, f); }
+            function ha(ar, f=false) { return Array.from(ar).map(function(n) { return hb(n, f); }).join(" "); }
+            function dbg(t) { appel.append(se("[debug] " + t, { className: 'debug' })); }
 
             cl(appel);
             var file = e.target.elements['file'].files[0];
@@ -58,35 +59,45 @@
             file.arrayBuffer()
             .then(function(d) { return new Int8Array(d); })
             .then(function(d) {
+                dbg("file " + file.name + " is " + h(d.byteLength) + " bytes");
                 if (ha(d.subarray(0, 3)) !== "47 49 46") {
                     throw "not a GIF!";
                 }
 
+                dbg("format is " + new TextDecoder().decode(d.subarray(0, 6)));
                 var idOffset = 13;
 
                 // check for GCT
-                var lsdByte = d.at(10);
-                appel.append(dse("lsdByte " + h(lsdByte)));
-                if ((lsdByte & 0x80) != 0) {
-                    var gctLength = 3 * (1 << ((lsdByte & 0x07) + 1));
-                    appel.append(dse("image has GCT, length " + gctLength));
+                var gctByte = d.at(10);
+                var hasGct = (gctByte & 0x80) != 0;
+                dbg("byte at offset 0xa is " + hb(gctByte, true) + ", GCT is " + (hasGct ? "present" : "absent"));
+                if (hasGct) {
+                    var gctLength = 3 * (1 << ((gctByte & 0x07) + 1));
+                    dbg("GCT length is " + h(gctLength, true));
                     idOffset += gctLength;
                 }
 
-                // check for GCE
-                appel.append(dse("gce? " + ha(d.subarray(idOffset, idOffset + 2))));
-                if (ha(d.subarray(idOffset, idOffset + 2)) === "21 f9") {
-                    var gceLength = d.at(idOffset + 2);
-                    appel.append(dse("image has GCE, length " + gceLength));
-                    idOffset += 4 + gceLength;
+                // check for extension blocks
+                while (hb(d.at(idOffset)) === "21") {
+                    dbg("found extension block " + hb(d.at(idOffset + 1), true) + " at " + h(idOffset));
+                    idOffset += 2;
+                    while (hb(d.at(idOffset)) !== "0") {
+                        dbg("skipping extension sub-block length " + hb(d.at(idOffset), true));
+                        idOffset += 1 + ((d.at(idOffset) >>> 0) & 0xff);
+                    }
+                    idOffset += 1;
                 }
 
-                appel.append(dse("start of image descriptor block at " + h(idOffset) + " start byte " + h(d.at(idOffset))));
+                dbg("start of image descriptor block at " + h(idOffset) + ", starting byte " + hb(d.at(idOffset), true));
+                if (hb(d.at(idOffset)) !== "2c") {
+                    throw "didn't get the image descriptor";
+                }
 
-                var bitfield = d.at(idOffset + 9);
-                appel.append(dse("bitfield " + h(bitfield)));
-                var isInterlaced = (bitfield & 0x40) != 0;
-                let m = el("div");
+                var lctByte = d.at(idOffset + 9);
+                dbg("LCT byte at offset " + h(idOffset + 9) + " is " + hb(lctByte, true));
+                var isInterlaced = (lctByte & 0x40) != 0;
+
+                let m = el("div", { style: 'font-size: 1.2rem' });
                 m.append(se("GIF file "));
                 m.append(el("code", { innerText: file.name }));
                 m.append(se(" "));
