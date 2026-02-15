@@ -1,4 +1,6 @@
 {
+  "name": "irys-webby",
+  "version": "0.0.0",
   "private": true,
   "dependencies": {
     "@xeserv/xeact": "^0.69.71"
