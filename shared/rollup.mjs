@@ -14,7 +14,7 @@ export function defaultConfig({ name, input, output }) {
 		output: {
 			name,
 			file: output,
-			format: 'iife',
+			format: 'umd',
 			sourcemap: true,
 		},
 		plugins: [
