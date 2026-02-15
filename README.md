@@ -4,9 +4,9 @@ This is a monorepo containing the sources for [catstret.ch](<https://catstret.ch
 
 ## Building
 
-`yarn run build` will build the sources for _everything_.
+`npm run build` will build the sources for _everything_.
 
-You can also build each "site" individually - `yarn run build:<sitename>` (where `<sitename>` is a directory under `src/`).
+You can also build each "site" individually - `npm run build:<sitename>` (where `<sitename>` is a directory under `src/`).
 
 ## Repo structure
 

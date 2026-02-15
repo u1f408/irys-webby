@@ -13,5 +13,5 @@ jobs:
         nix_path: nixpkgs=channel:nixos-unstable
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-    - run: nix develop --command yarn install
-    - run: nix develop --command yarn run build
+    - run: nix develop --command npm install
+    - run: nix develop --command npm run build

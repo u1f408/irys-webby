@@ -16,9 +16,9 @@ jobs:
         nix_path: nixpkgs=channel:nixos-unstable
         extra_nix_config: |
           access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-    - run: nix develop --command yarn install
-    - run: nix develop --command yarn run clean
-    - run: nix develop --command env IS_DEPLOYMENT_BUILD=1 yarn run build:assets
+    - run: nix develop --command npm install
+    - run: nix develop --command npm run clean
+    - run: nix develop --command env IS_DEPLOYMENT_BUILD=1 npm run build:assets
     - name: Deploy to BunnyCDN
       uses: u1f408/bunnycdn-storage-deploy@main
       with:

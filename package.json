@@ -22,6 +22,7 @@
     "build:assets:11ty": "cd src/assets && eleventy --config eleventy.config.js",
     "build:assets:sass": "cd src/assets && sass --style=compressed .:../../dist/assets",
     "build:assets": "mkdir -p dist/assets && run-s build:assets:*",
+    "prepare": "run-s clean && mkdir -p dist/iryscc && run-s build:iryscc:rollup",
     "build": "run-s clean build:*",
     "clean": "rm -rf dist && mkdir dist"
   }
