@@ -191,7 +191,7 @@ export const renderAll = async () => {
 }
 
 // allow changing PK API base URL at script load
-if (typeof document.currentScript.dataset.pkfrontersApiBase === "string") {
+if (typeof document !== "undefined" && typeof document.currentScript.dataset.pkfrontersApiBase === "string") {
 	var base = document.currentScript.dataset.pkfrontersApiBase;
 	if (base === "beta") {
 		base = PK_BETA_API_BASE_URL
@@ -201,6 +201,6 @@ if (typeof document.currentScript.dataset.pkfrontersApiBase === "string") {
 }
 
 // render all available on script load, if we're not prohibited from doing so
-if (typeof document.currentScript.dataset.pkfrontersNoauto !== "string") {
+if (typeof document !== "undefined" && typeof document.currentScript.dataset.pkfrontersNoauto !== "string") {
 	setTimeout(0, renderAll())
 }
