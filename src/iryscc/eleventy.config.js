@@ -1,7 +1,7 @@
 const shared = require('../../shared/index.js')
 const eleventyWrapper = require('../../shared/eleventy.js')
 
-module.exports = eleventyWrapper(function() {
+module.exports = eleventyWrapper(function(eleventyConfig) {
 	return {
 		dir: {
 			input: ".",

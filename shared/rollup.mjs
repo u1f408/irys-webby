@@ -1,4 +1,5 @@
 import alias from '@rollup/plugin-alias'
+import pluginJson from '@rollup/plugin-json'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import esbuild from 'rollup-plugin-esbuild'
 import path from 'node:path'
@@ -27,6 +28,7 @@ export function defaultConfig({ name, input, output }) {
 				],
 				customResolver,
 			}),
+            pluginJson(),
 			nodeResolve(),
 			esbuild({
 				sourceMap: true,

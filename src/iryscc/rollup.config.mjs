@@ -28,4 +28,9 @@ export default defineConfig([
         input: 'pk/listy/listy.js',
         output: ROOT_DIR + '/dist/iryscc/pk/listy/listy.js',
     }),
+    defaultConfig({
+        name: 'pkmnPlaceholderGen',
+        input: 'pkmn/placeholdergen/index.tsx',
+        output: ROOT_DIR + '/dist/iryscc/pkmn/placeholdergen/index.js',
+    }),
 ])
