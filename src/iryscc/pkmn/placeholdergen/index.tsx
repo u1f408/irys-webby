@@ -1,6 +1,6 @@
 import { g, x, n } from "@xeserv/xeact"
 import { jsx } from "@meow/lib/jsx-runtime"
-import POKEDEX, { PokemonImageType, PokemonNameLanguages, PokemonTypeIcons } from "../pokedex.ts";
+import POKEDEX, { PokemonImage, PokemonImageVariants, PokemonNameLanguages, PokemonTypeIcons } from "../pokedex.ts";
 
 const doGenerate = (ev, options) => {
     ev.preventDefault();
@@ -10,14 +10,29 @@ const doGenerate = (ev, options) => {
     let statusDiv = g("status");
     x(statusDiv);
     statusDiv.append((
-        <span>Filter returned {ourList.length} Pokémon.</span>
+        <span>
+            <strong>{ourList.length} Pokémon</strong>,
+            paper size set to <strong>{{usletter:"US Letter",a4:"A4"}[data.paper]}</strong>.
+        </span>
     ));
 
     let cardDiv = g("cards");
     x(cardDiv);
+    cardDiv.className = `paper-${data.paper}`;
     cardDiv.append(...ourList.map((pkmn) => {
         let headerExtra = <div class="pkmnCard-headerExtra"></div>;
         let footer = <div class="pkmnCard-footer"></div>;
+
+        if (data.heightweight) {
+            headerExtra.append(
+                <span class="pkmnCard-heightweight">
+                    {(pkmn.height * 0.1).toFixed(1)}m
+                    ({Math.floor((pkmn.height * 3.93701) / 12)}'{Math.ceil((pkmn.height * 3.93701) % 12)}")
+                    / {(pkmn.weight * 0.1).toFixed(1)}kg
+                    ({(pkmn.weight * 0.220462).toFixed(1)}lbs)
+                </span>
+            );
+        }
 
         if (data.typeicon) {
             headerExtra.append(
@@ -54,25 +69,32 @@ const doGenerate = (ev, options) => {
                     {headerExtra}
                 </div>
                 <div class="pkmnCard-image">
-                    <img src={PokemonImageType[data.imgtype](pkmn.dex.national)}></img>
+                    <img src={PokemonImage[data.imgtype](pkmn.dex.national)}></img>
                 </div>
                 {footer}
             </div>
        );
     }));
 
-    g("options-clear").classList.remove("hidden");
+    g("options-go").classList.remove("btn-blue");
+    g("options-print").classList.add("btn-blue");
     g("options-print").classList.remove("hidden");
+    g("options-clear").classList.remove("hidden");
     return false;
 };
 
 const handleOptionsClear = (ev, options) => {
     ev.preventDefault();
 
-    g("options-clear").classList.add("hidden");
+    let cards = g("cards");
+    cards.className = "";
+    x(cards);
+
+    g("options-go").classList.add("btn-blue");
+    g("options-print").classList.remove("btn-blue");
     g("options-print").classList.add("hidden");
+    g("options-clear").classList.add("hidden");
     x(g("status"));
-    x(g("cards"));
 
     //options.reset();
     //handleOptionsChange(options);
@@ -82,6 +104,9 @@ const handleOptionsClear = (ev, options) => {
 
 const handleOptionsChange = (options) => {
     let data = Object.fromEntries(new FormData(options));
+
+    g("options-go").classList.add("btn-blue");
+    g("options-print").classList.remove("btn-blue");
 
     let genlist = g("options-genlist");
     if (data.gentype == "all") {
@@ -112,14 +137,14 @@ const init = () => {
 
     let dexList = g("g_dex");
     x(dexList);
-    dexList.append(...Array.from(Object.entries(POKEDEX.dexes)).map((dex) => (
+    dexList.append(...Array.from(Object.entries(POKEDEX.dexes)).toSorted((a, b) => parseInt(a[1].id) - parseInt(b[1].id)).map((dex) => (
         <option value={dex[0]}>{dex[1].name.en} ({dex[1].pokemon.length} Pokémon)</option>
     )));
 
     let imageList = g("g_imgtype");
     x(imageList);
-    imageList.append(...Array.from(Object.keys(PokemonImageType)).map((img) => (
-        <option value={img} selected={img === "highres"}>{img}</option>
+    imageList.append(...Array.from(Object.entries(PokemonImageVariants)).map((img) => (
+        <option value={img[0]} selected={img[1].default}>{img[1].friendly}</option>
     )));
 
     let langList = g("g_namelang");

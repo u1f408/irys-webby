@@ -43,8 +43,10 @@ def get_dex(name, url, include_entries=False):
     dex = r.json()
 
     output = {
+        "id": "%d" % dex["id"],
         "name": dict([(x["language"]["name"], x["name"]) for x in dex["names"]]),
     }
+
     if include_entries:
         output["pokemon_entries"] = dex["pokemon_entries"]
 
@@ -74,7 +76,7 @@ def main():
 
     print("==> writing to 'pokedex.json'...")
     with open("pokedex.json", "w") as fh:
-        json.dump(output, fh)
+        json.dump(output, fh, sort_keys=True, indent=2)
 
 if __name__ == "__main__":
     main()

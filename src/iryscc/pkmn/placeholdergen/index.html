@@ -3,96 +3,55 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, width=device-width">
+    <link rel="stylesheet" href="index.css">
     <title>Pokémon card placeholder generator</title>
-    <style>
-        *, *::before, *::after { box-sizing: border-box; }
-        html { display: flex; flex-flow: column nowrap; margin: 0; }
-        body { flex: 1; font: 100%/1.2 sans-serif; margin: .5rem 1rem; }
-        .hidden { display: none; visibility: hidden; }
-        header { border-bottom: 2px solid #000; }
-
-        #app { margin-bottom: 1rem; }
-        #status:not(:empty) { margin-top: 0.8rem; }
-        #options { border-bottom: 2px solid #000; padding: 1rem 0; }
-        .options-btn { display: flex; flex-flow: row wrap; gap: 0.8rem; }
-        .options-extra { margin-left: 0.5rem; padding: 0.5rem 0.5rem 0.2rem 0.5rem; border-left: 2px solid #000; }
-
-        details { margin: 0 0 0.5rem 0; }
-        fieldset { border: none; margin: 0 0 0.5rem 0; padding: 0; }
-        form input:not([type=radio]):not([type=checkbox]), form button { display: block; }
-        form textarea { display: block; width: 100%; }
-
-        .btn { display: block; padding: .5rem 1rem; border: 1px solid #858686; border-radius: 3px; background: #cecece; color: #000; }
-        .btn.btn-blue { background: #d2e2f1; }
-        .btn.btn-red { background: #f4d7d7; }
-        .badge { display: inline-block; text-transform: uppercase; border: 1px solid #858686; background: #858686; color: #fff; font-size: 0.8em; padding: 0.125rem; border-radius: 2px; font-family: monospace; }
-
-        .pkmnCard {
-            display: flex;
-            overflow: none;
-            flex-flow: column nowrap;
-            justify-content: space-between;
-
-            background: #fff;
-            color: #000;
-
-            width: 62mm;
-            height: 86mm;
-            padding: 3mm 2mm;
-            border: 1px solid #000;
-            border-radius: 3px;
-        }
-
-        .pkmnCard-header { text-align: center; margin-top: 0.25rem; }
-        .pkmnCard-header-name { font-size: 1.25rem; font-weight: bold; }
-        .pkmnCard-types { display: inline-flex; flex-flow: row wrap; gap: 0.25rem; margin-top: 0.25rem; }
-        .pkmnCard-image { display: grid; place-items: center; }
-        .pkmnCard-image img { max-width: 45mm; height: auto; }
-        .pkmnCard-footer { font-size: 0.75rem; color: #858686; }
-        .pkmnCard-allnames { display: inline-flex; flex-flow: row wrap; gap: 0.25rem; }
-        .pkmnCard-langname { display: inline-block; }
-        .pkmnCard-langname:not(:last-child):after { content: "\20\002022\20"; }
-        .pkmnCard-langname-langs { display: inline-flex; flex-flow: row wrap; gap: 0.125rem; margin-right: 0.25rem; }
-
-        @media screen {
-            #cards {
-                display: flex;
-                flex-flow: row wrap;
-                gap: 0.5rem;
-            }
-        }
-
-        @media print {
-            body { margin: 0; }
-            header, #app { display: none; visibility: hidden; }
-            #cards {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 0;
-            }
-        }
-    </style>
 </head>
 <body>
-    <header>
+    <header id="top">
         <h1>Pokémon card placeholder generator</h1>
+
         <p>
-            This tool generates a list of Pokémon, with their national
-            Pokédex number & sprite, designed for printing out to use as
-            placeholders in a card binder.
+            This tool generates a grid of Pokémon data, including the national
+            Pokédex number; Pokémon sprite; and optionally some other stuff,
+            designed for printing out to use as placeholders in a card binder.
         </p>
-        <p>
-            Made with love for Jupe, my partner, who is currently compiling
-            a binder of their favourite card for every Pokémon.
-        </p>
+
         <p>
             The printable stylesheet for this enforces a 3-column layout,
-            which gets 9 cards per portrait A4 sheet of paper. I haven't even
-            tried to see what it does when printing to US Letter paper - you're
-            on your own there.
+            which results in a 3x3 grid of cards per sheet of portrait A4 paper.
+            If you select the "US Letter" paper type, each card is made a little
+            bit smaller to make a 3x3 grid fit there too, so you're not using as
+            much paper. We don't have any US Letter paper, because we live in a
+            sane country, but it looks okay in a print preview.
         </p>
+
         <p>
-            Pokédex data + Pokémon sprites courtesy of <a href="https://pokeapi.co/">PokéAPI</a>.
+            <strong>For the best results: </strong>
+            <ul>
+                <li>make sure your print scale is set to 100% (ie. not "scale to page width")</li>
+                <li>turn on the "print backgrounds" option in your browser's print dialog</li>
+                <li>print in colour if you can (the type icons in particular can be kinda hard to read when dithered to black & white)</li>
+            </ul>
+
+            <strong>For A4 prints, </strong> in addition to the above:
+            <ul>
+                <li>set your page margins to 10mm (roughly 0.39")</li>
+            </ul>
+        </p>
+
+        <p>
+            Made with love for Jupe, our partner, who is currently compiling
+            a binder of their favourite card for every Pokémon. 💜️
+        </p>
+
+        <p>
+            If this tool has been useful to you, please consider
+            <a href="https://ko-fi.com/irises">
+                throwing us a couple bucks on Ko-fi!
+            </a>
+
+            If you want to yell at us about this tool for whatever reason, our
+            contact details are <a href="https://catstret.ch">on our main website.</a>
         </p>
     </header>
 
@@ -100,12 +59,12 @@
     <div id="app" class="hidden">
         <form id="options">
             <fieldset>
-                <label for="g_dex"><strong>Pokédex: </strong></label>
+                <label for="g_dex"><strong>Pokédex:</strong></label>
                 <select name="dex" id="g_dex"></select>
             </fieldset>
 
             <fieldset>
-                <strong>Show: </strong>
+                <strong>Show:</strong>
                 <label for="gt_all">
                     <input id="gt_all" name="gentype" value="all" type="radio" checked>
                     All Pokémon
@@ -129,19 +88,24 @@
                 <summary>Extra cosmetic options</summary>
                 <div class="options-extra">
                     <fieldset>
+                        <label for="g_imgtype"><strong>Pokémon images:</strong></label>
+                        <select name="imgtype" id="g_imgtype"></select>
+                    </fieldset>
+
+                    <fieldset>
+                        <label for="g_heightweight">
+                            <input type="checkbox" name="heightweight" id="g_heightweight">
+                            Show Pokémon height/weight?
+                        </label>
+
                         <label for="g_typeicon">
-                            <input type="checkbox" name="typeicon" id="g_typeicon" checked>
+                            <input type="checkbox" name="typeicon" id="g_typeicon">
                             Show type icons?
                         </label>
                     </fieldset>
 
                     <fieldset>
-                        <label for="g_imgtype"><strong>Pokémon images: </strong></label>
-                        <select name="imgtype" id="g_imgtype"></select>
-                    </fieldset>
-
-                    <fieldset>
-                        <label for="g_namelang"><strong>Language for Pokémon name: </strong></label>
+                        <label for="g_namelang"><strong>Language for Pokémon name:</strong></label>
                         <select name="namelang" id="g_namelang"></select>
                     </fieldset>
 
@@ -154,6 +118,18 @@
                 </div>
             </details>
 
+            <fieldset>
+                <strong>Paper size: </strong>
+                <label for="p_a4">
+                    <input id="p_a4" name="paper" value="a4" type="radio" checked>
+                    A4
+                </label>
+                <label for="p_usletter">
+                    <input id="p_usletter" name="paper" value="usletter" type="radio">
+                    US Letter
+                </label>
+            </fieldset>
+
             <div class="options-btn">
                 <button id="options-go" class="btn btn-blue" type="submit">Generate!</button>
                 <button id="options-print" class="btn hidden">Print</button>
@@ -165,6 +141,16 @@
     </div>
 
     <div id="cards"></div>
+    <footer>
+        <div>
+            <a href="#top" class="btn">Back to the top</a>
+        </div>
+
+        <div class="footer-text">
+            Pokédex data + Pokémon sprites courtesy of <a href="https://pokeapi.co/">PokéAPI</a>.<br>
+            Pokémon and Pokémon character names are trademarks of Nintendo.
+        </div>
+    </header>
 
     <script src="index.js" async></script>
 </body>

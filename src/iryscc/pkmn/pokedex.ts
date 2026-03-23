@@ -11,9 +11,27 @@ export const PokemonNameLanguages = {
     "es": "Español",
 };
 
-export const PokemonImageType = {
-    highres: (natdex) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${natdex}.png`,
-    lowres: (natdex) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${natdex}.png`,
+export const PokemonImage = {
+    "official-artwork": (natdex) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${natdex}.png`,
+    "home": (natdex) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${natdex}.png`,
+    "dream-world": (natdex) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${natdex}.svg`,
+    "sprite": (natdex) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${natdex}.png`,
+};
+
+export const PokemonImageVariants = {
+    "official-artwork": {
+        default: true,
+        friendly: "High resolution art (default)",
+    },
+    "home": {
+        friendly: "Pokémon Home art",
+    },
+    "dream-world": {
+        friendly: "Pokémon Dream World art (not all Pokémon included!)",
+    },
+    "sprite": {
+        friendly: "Classic sprites",
+    },
 };
 
 export const PokemonTypeIcons = {
