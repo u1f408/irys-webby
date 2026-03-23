@@ -3,7 +3,7 @@ import { jsx } from "@meow/lib/jsx-runtime"
 import POKEDEX, { PokemonImage, PokemonImageVariants, PokemonNameLanguages, PokemonTypeIcons, PokemonTypeIconVariants } from "../pokedex.ts";
 
 const doFilter = (data) => {
-    let thisDex = Array.from(POKEDEX.pokemon);
+    let thisDex = Array.from(Object.values(POKEDEX.pokemon));
     if (data.gentype === "dex" || data.gentype === "except") {
         thisDex = Array.from(POKEDEX.dexes[data.dex].pokemon).map((pkmn) => POKEDEX.pokemon[pkmn]);
     }
