@@ -1,6 +1,6 @@
 import { g, x, n } from "@xeserv/xeact"
 import { jsx } from "@meow/lib/jsx-runtime"
-import POKEDEX, { PokemonImage, PokemonImageVariants, PokemonNameLanguages, PokemonTypeIcons } from "../pokedex.ts";
+import POKEDEX, { PokemonImage, PokemonImageVariants, PokemonNameLanguages, PokemonTypeIcons, PokemonTypeIconVariants } from "../pokedex.ts";
 
 const doGenerate = (ev, options) => {
     ev.preventDefault();
@@ -23,22 +23,22 @@ const doGenerate = (ev, options) => {
         let headerExtra = <div class="pkmnCard-headerExtra"></div>;
         let footer = <div class="pkmnCard-footer"></div>;
 
-        if (data.heightweight) {
+        if (data.typeimg !== "none") {
             headerExtra.append(
+                <div class="pkmnCard-types">
+                    {...Array.from(pkmn.types).map((type) => <img src={PokemonTypeIcons[data.typeimg](type)}></img>)}
+                </div>
+            );
+        }
+
+        if (data.heightweight) {
+            footer.append(
                 <span class="pkmnCard-heightweight">
                     {(pkmn.height * 0.1).toFixed(1)}m
                     ({Math.floor((pkmn.height * 3.93701) / 12)}'{Math.ceil((pkmn.height * 3.93701) % 12)}")
                     / {(pkmn.weight * 0.1).toFixed(1)}kg
                     ({(pkmn.weight * 0.220462).toFixed(1)}lbs)
                 </span>
-            );
-        }
-
-        if (data.typeicon) {
-            headerExtra.append(
-                <div class="pkmnCard-types">
-                    {...Array.from(pkmn.types).map((type) => <img src={PokemonTypeIcons[type]}></img>)}
-                </div>
             );
         }
 
@@ -64,12 +64,12 @@ const doGenerate = (ev, options) => {
             <div class="pkmnCard">
                 <div class="pkmnCard-header">
                     <div class="pkmnCard-header-name">
-                        #{pkmn.dex.national} &ndash; {pkmn.name[data.namelang]}
+                        #{pkmn.dex.national} {pkmn.name[data.namelang]}
                     </div>
                     {headerExtra}
                 </div>
                 <div class="pkmnCard-image">
-                    <img src={PokemonImage[data.imgtype](pkmn.dex.national)}></img>
+                    <img src={PokemonImage[data.image](pkmn.dex.national)}></img>
                 </div>
                 {footer}
             </div>
@@ -109,24 +109,35 @@ const handleOptionsChange = (options) => {
     g("options-print").classList.remove("btn-blue");
 
     let genlist = g("options-genlist");
-    if (data.gentype == "all") {
+    let dexlist = g("options-pokedex");
+
+    if (data.gentype === "dex") {
+        dexlist.classList.remove("hidden");
         genlist.classList.add("hidden");
-    } else {
+    } else if (data.gentype === "only" || data.gentype === "except") {
+        dexlist.classList.add("hidden");
         genlist.classList.remove("hidden");
+    } else {
+        genlist.classList.add("hidden");
+        dexlist.classList.add("hidden");
     }
 };
 
 const doFilter = (data) => {
-    let thisDex = Array.from(POKEDEX.dexes[data.dex].pokemon).map((pkmn) => POKEDEX.pokemon[pkmn]);
-    let genlist = data.genlist
-        .split(/(?:\s+|\n|,)/)
-        .map((n) => parseInt(n.trim(), 10))
-        .filter((n) => n > 0);
+    let thisDex = Array.from(POKEDEX.pokemon);
+    if (data.gentype === "dex") {
+        thisDex = Array.from(POKEDEX.dexes[data.dex].pokemon).map((pkmn) => POKEDEX.pokemon[pkmn]);
+    } else if (data.gentype === "only" || data.gentype === "except") {
+        let genlist = data.genlist
+            .split(/(?:\s+|\n|,)/)
+            .map((n) => parseInt(n.trim(), 10))
+            .filter((n) => n > 0);
 
-    if (data.gentype === "only") {
-        thisDex = thisDex.filter((pkmn) => genlist.indexOf(pkmn.dex.national) !== -1);
-    } else if (data.gentype === "except") {
-        thisDex = thisDex.filter((pkmn) => genlist.indexOf(pkmn.dex.national) === -1);
+        if (data.gentype === "only") {
+            thisDex = thisDex.filter((pkmn) => genlist.indexOf(pkmn.dex.national) !== -1);
+        } else {
+            thisDex = thisDex.filter((pkmn) => genlist.indexOf(pkmn.dex.national) === -1);
+        }
     }
 
     return thisDex;
@@ -137,21 +148,34 @@ const init = () => {
 
     let dexList = g("g_dex");
     x(dexList);
-    dexList.append(...Array.from(Object.entries(POKEDEX.dexes)).toSorted((a, b) => parseInt(a[1].id) - parseInt(b[1].id)).map((dex) => (
-        <option value={dex[0]}>{dex[1].name.en} ({dex[1].pokemon.length} Pokémon)</option>
-    )));
+    dexList.append(...Array.from(Object.entries(POKEDEX.dexes))
+        .toSorted((a, b) => parseInt(a[1].id) - parseInt(b[1].id))
+        .filter((dex) => dex[0] !== "national")
+        .map((dex) => (
+            <option value={dex[0]}>{dex[1].name.en} ({dex[1].pokemon.length} Pokémon)</option>
+        )));
 
-    let imageList = g("g_imgtype");
+    let imageList = g("g_image");
     x(imageList);
-    imageList.append(...Array.from(Object.entries(PokemonImageVariants)).map((img) => (
-        <option value={img[0]} selected={img[1].default}>{img[1].friendly}</option>
-    )));
+    imageList.append(...Array.from(Object.entries(PokemonImageVariants))
+        .map((img) => (
+            <option value={img[0]} selected={img[1].default}>{img[1].friendly}</option>
+        )));
+
+    let typeimgList = g("g_typeimg");
+    x(typeimgList);
+    typeimgList.append(<option value="none" selected>None</option>);
+    typeimgList.append(...Array.from(Object.entries(PokemonTypeIconVariants))
+        .map((img) => (
+            <option value={img[0]}>{img[1].friendly}</option>
+        )));
 
     let langList = g("g_namelang");
     x(langList);
-    langList.append(...Array.from(Object.entries(PokemonNameLanguages)).map((lang) => (
-        <option value={lang[0]} selected={lang[0] === "en"}>{lang[1]}</option>
-    )));
+    langList.append(...Array.from(Object.entries(PokemonNameLanguages))
+        .map((lang) => (
+            <option value={lang[0]} selected={lang[0] === "en"}>{lang[1]}</option>
+        )));
 
     g("options-print").addEventListener('click', (ev) => { ev.preventDefault(); setTimeout(() => window.print(), 1); return false; });
     g("options-clear").addEventListener('click', (ev) => handleOptionsClear(ev, options));

@@ -34,23 +34,41 @@ export const PokemonImageVariants = {
     },
 };
 
+const typeIDs = {
+    "normal": 1,
+    "fighting": 2,
+    "flying": 3,
+    "poison": 4,
+    "ground": 5,
+    "rock": 6,
+    "bug": 7,
+    "ghost": 8,
+    "steel": 9,
+    "fire": 10,
+    "water": 11,
+    "grass": 12,
+    "electric": 13,
+    "psychic": 14,
+    "ice": 15,
+    "dragon": 16,
+    "dark": 17,
+    "fairy": 18,
+};
+
 export const PokemonTypeIcons = {
-    "normal": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/1.png",
-    "fighting": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/2.png",
-    "flying": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/3.png",
-    "poison": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/4.png",
-    "ground": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/5.png",
-    "rock": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/6.png",
-    "bug": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/7.png",
-    "ghost": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/8.png",
-    "steel": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/9.png",
-    "fire": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/10.png",
-    "water": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/11.png",
-    "grass": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/12.png",
-    "electric": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/13.png",
-    "psychic": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/14.png",
-    "ice": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/15.png",
-    "dragon": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/16.png",
-    "dark": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/17.png",
-    "fairy": "https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/18.png",
+    "scarlet-violet": (type) => `https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-ix/scarlet-violet/${typeIDs[type]}.png`,
+    "sword-shield": (type) => `https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-viii/sword-shield/${typeIDs[type]}.png`,
+    "sun-moon": (type) => `https://raw.githubusercontent.com/PokeAPI/sprites/refs/heads/master/sprites/types/generation-vii/sun-moon/${typeIDs[type]}.png`,
+};
+
+export const PokemonTypeIconVariants = {
+    "scarlet-violet": {
+        friendly: 'Scarlet/Violet',
+    },
+    "sword-shield": {
+        friendly: 'Sword/Shield (best for monochrome prints)',
+    },
+    "sun-moon": {
+        friendly: 'Sun/Moon (most "classic" looking)',
+    },
 };
