@@ -58,11 +58,11 @@
     <div id="app" class="hidden">
         <form id="options">
             <fieldset>
-                <strong>Paper size: </strong>
+                <strong>Paper size: </strong><br>
                 <label for="p_a4">
                     <input id="p_a4" name="paper" value="a4" type="radio" checked>
                     A4
-                </label>
+                </label><br>
                 <label for="p_usletter">
                     <input id="p_usletter" name="paper" value="usletter" type="radio">
                     US Letter
@@ -70,51 +70,51 @@
             </fieldset>
 
             <fieldset>
-                <strong>Pokémon to show:</strong>
+                <strong>Pokémon to show:</strong><br>
                 <label for="gt_all">
                     <input id="gt_all" name="gentype" value="all" type="radio" checked>
                     All Pokémon
-                </label>
+                </label><br>
                 <label for="gt_dex">
                     <input id="gt_dex" name="gentype" value="dex" type="radio">
                     A specific Pokédex
-                </label>
+                </label><br>
                 <label for="gt_only">
                     <input id="gt_only" name="gentype" value="only" type="radio">
                     Only specific Pokémon
-                </label>
+                </label><br>
                 <label for="gt_except">
                     <input id="gt_except" name="gentype" value="except" type="radio">
                     All except specific Pokémon
                 </label>
             </fieldset>
 
-            <fieldset id="options-pokedex" class="options-extra hidden">
-                <label for="g_dex">Pokédex:</label>
+            <fieldset id="options-pokedex" class="hidden">
+                <label for="g_dex"><strong>Pokédex:</strong></label><br>
                 <select name="dex" id="g_dex"></select>
             </fieldset>
 
-            <fieldset id="options-genlist" class="options-extra hidden">
-                <label for="gt_list">List of Pokémon (enter national Pokédex numbers, line or comma separated):</label>
+            <fieldset id="options-genlist" class="hidden">
+                <label for="gt_list"><strong>List of Pokémon (enter national Pokédex numbers, line or comma separated):</strong></label>
                 <textarea name="genlist" id="gt_list" rows="12"></textarea>
             </fieldset>
 
             <fieldset>
-                <label for="g_image"><strong>Pokémon images:</strong></label>
+                <label for="g_image"><strong>Pokémon images:</strong></label><br>
                 <select name="image" id="g_image"></select>
             </fieldset>
 
-            <fieldset class="options-extra">
-                <label for="g_typeimg">Type icons:</label>
+            <fieldset>
+                <label for="g_typeimg"><strong>Type icons:</strong></label><br>
                 <select name="typeimg" id="g_typeimg"></select>
             </fieldset>
 
             <fieldset>
-                <label for="g_namelang"><strong>Language for Pokémon name:</strong></label>
+                <label for="g_namelang"><strong>Pokémon name language:</strong></label><br>
                 <select name="namelang" id="g_namelang"></select>
             </fieldset>
 
-            <fieldset class="options-extra">
+            <fieldset>
                 <label for="g_alllangs">
                     <input type="checkbox" name="alllangs" id="g_alllangs">
                     Show names in all other languages in smaller text at the bottom of the card?
@@ -122,15 +122,10 @@
             </fieldset>
 
             <fieldset>
-                <strong>Extras:</strong>
-                <div class="options-extra">
-                    <fieldset>
-                        <label for="g_heightweight">
-                            <input type="checkbox" name="heightweight" id="g_heightweight">
-                            Show Pokémon height/weight?
-                        </label>
-                    </fieldset>
-                </div>
+                <label for="g_heightweight">
+                    <input type="checkbox" name="heightweight" id="g_heightweight">
+                    Show Pokémon height/weight?
+                </label>
             </fieldset>
 
             <div class="options-btn">

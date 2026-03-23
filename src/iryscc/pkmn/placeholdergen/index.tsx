@@ -2,6 +2,26 @@ import { g, x, n } from "@xeserv/xeact"
 import { jsx } from "@meow/lib/jsx-runtime"
 import POKEDEX, { PokemonImage, PokemonImageVariants, PokemonNameLanguages, PokemonTypeIcons, PokemonTypeIconVariants } from "../pokedex.ts";
 
+const doFilter = (data) => {
+    let thisDex = Array.from(POKEDEX.pokemon);
+    if (data.gentype === "dex" || data.gentype === "except") {
+        thisDex = Array.from(POKEDEX.dexes[data.dex].pokemon).map((pkmn) => POKEDEX.pokemon[pkmn]);
+    }
+
+    let genlist = data.genlist
+        .split(/(?:\s+|\n|,)/)
+        .map((n) => parseInt(n.trim(), 10))
+        .filter((n) => n > 0);
+
+    if (data.gentype === "only") {
+        thisDex = thisDex.filter((pkmn) => genlist.indexOf(pkmn.dex.national) !== -1);
+    } else if (data.gentype === "except") {
+        thisDex = thisDex.filter((pkmn) => genlist.indexOf(pkmn.dex.national) === -1);
+    }
+
+    return thisDex;
+};
+
 const doGenerate = (ev, options) => {
     ev.preventDefault();
 
@@ -96,9 +116,6 @@ const handleOptionsClear = (ev, options) => {
     g("options-clear").classList.add("hidden");
     x(g("status"));
 
-    //options.reset();
-    //handleOptionsChange(options);
-
     return false;
 };
 
@@ -114,33 +131,16 @@ const handleOptionsChange = (options) => {
     if (data.gentype === "dex") {
         dexlist.classList.remove("hidden");
         genlist.classList.add("hidden");
-    } else if (data.gentype === "only" || data.gentype === "except") {
+    } else if (data.gentype === "only") {
         dexlist.classList.add("hidden");
+        genlist.classList.remove("hidden");
+    } else if (data.gentype === "except") {
+        dexlist.classList.remove("hidden");
         genlist.classList.remove("hidden");
     } else {
         genlist.classList.add("hidden");
         dexlist.classList.add("hidden");
     }
-};
-
-const doFilter = (data) => {
-    let thisDex = Array.from(POKEDEX.pokemon);
-    if (data.gentype === "dex") {
-        thisDex = Array.from(POKEDEX.dexes[data.dex].pokemon).map((pkmn) => POKEDEX.pokemon[pkmn]);
-    } else if (data.gentype === "only" || data.gentype === "except") {
-        let genlist = data.genlist
-            .split(/(?:\s+|\n|,)/)
-            .map((n) => parseInt(n.trim(), 10))
-            .filter((n) => n > 0);
-
-        if (data.gentype === "only") {
-            thisDex = thisDex.filter((pkmn) => genlist.indexOf(pkmn.dex.national) !== -1);
-        } else {
-            thisDex = thisDex.filter((pkmn) => genlist.indexOf(pkmn.dex.national) === -1);
-        }
-    }
-
-    return thisDex;
 };
 
 const init = () => {
@@ -150,7 +150,6 @@ const init = () => {
     x(dexList);
     dexList.append(...Array.from(Object.entries(POKEDEX.dexes))
         .toSorted((a, b) => parseInt(a[1].id) - parseInt(b[1].id))
-        .filter((dex) => dex[0] !== "national")
         .map((dex) => (
             <option value={dex[0]}>{dex[1].name.en} ({dex[1].pokemon.length} Pokémon)</option>
         )));

@@ -58,21 +58,16 @@ details {
         flex-flow: row wrap;
         gap: 0.8rem;
     }
-
-    .options-extra {
-        margin-left: 0.5rem;
-        padding: 0.2rem 0.5rem;
-        border-left: 2px solid #858686;
-    }
 }
 
 form {
     fieldset {
+        position: relative;
         border: none;
         padding: 0;
 
         &:not(:last-child) {
-            margin: 0 0 0.5rem 0;
+            margin: 0 0 0.75rem 0;
         }
     }
 
@@ -80,11 +75,24 @@ form {
         display: block;
     }
 
+    input[type=text], select {
+        display: inline-block;
+        padding: 0.35rem 0.5rem;
+        font-size: 0.85rem;
+        height: 2rem;
+        background: #ffffff;
+        color: #0b0c0c;
+        border: 1px solid #0b0c0c;
+        border-radius: 3px;
+    }
+
     textarea {
         display: block;
         width: 100%;
         padding: 0.8rem;
-        border: 1px solid #000;
+        background: #ffffff;
+        color: #0b0c0c;
+        border: 1px solid #0b0c0c;
         border-radius: 3px;
     }
 }
